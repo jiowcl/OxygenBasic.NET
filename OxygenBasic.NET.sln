@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29215.179
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OxygenBasic.NET", "OxygenBasic.NET\OxygenBasic.NET.csproj", "{52A7754E-31E0-4FC4-A1FE-3F0A35CCE94B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OxygenBasic.Example", "OxygenBasic.Example\OxygenBasic.Example.csproj", "{055658DE-C23B-4019-ABAD-B547079C5A5F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{52A7754E-31E0-4FC4-A1FE-3F0A35CCE94B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52A7754E-31E0-4FC4-A1FE-3F0A35CCE94B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52A7754E-31E0-4FC4-A1FE-3F0A35CCE94B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52A7754E-31E0-4FC4-A1FE-3F0A35CCE94B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{055658DE-C23B-4019-ABAD-B547079C5A5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{055658DE-C23B-4019-ABAD-B547079C5A5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{055658DE-C23B-4019-ABAD-B547079C5A5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{055658DE-C23B-4019-ABAD-B547079C5A5F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {49A59B04-C19A-4D47-ABC3-30C98470B719}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Copyright>Ji-Feng Tsai</Copyright>
+    <Description>C# Wrapper for OxygenBasic</Description>
+    <Company>Inwazy Technology</Company>
+    <Authors>jiowcl</Authors>
+    <PackageProjectUrl>https://github.com/jiowcl/OxygenBasic.NET</PackageProjectUrl>
+    <PackageReleaseNotes>1.0.0</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="oxygen.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
