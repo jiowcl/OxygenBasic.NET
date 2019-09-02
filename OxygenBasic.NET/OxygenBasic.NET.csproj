@@ -9,11 +9,16 @@
     <Authors>jiowcl</Authors>
     <PackageProjectUrl>https://github.com/jiowcl/OxygenBasic.NET</PackageProjectUrl>
     <PackageReleaseNotes>1.0.0</PackageReleaseNotes>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
     <None Update="oxygen.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
     </None>
   </ItemGroup>
 
