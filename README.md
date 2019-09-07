@@ -2,6 +2,8 @@
 
 .Net Wrapper for OxygenBasic Programming Language.
 
+![GitHub](https://img.shields.io/github/license/jiowcl/MQL-Quotes.svg)
+
 # Environment
 
 - Windows 7 above (recommend)
