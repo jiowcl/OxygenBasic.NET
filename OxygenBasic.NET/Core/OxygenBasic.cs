@@ -100,7 +100,7 @@ namespace OxygenBasic.NET.Core
         /// <returns>Returns string.</returns>
         [DllImport("oxygen.dll", EntryPoint = "o2_prep", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.AnsiBStr)]
-        public static extern string Prep([MarshalAs(UnmanagedType.LPWStr)] string s);
+        public static extern string Prep([MarshalAs(UnmanagedType.AnsiBStr)] string s);
 
         /// <summary>
         /// Varcall

@@ -20,11 +20,18 @@ namespace OxygenBasic.Example
             string scriptPath = @"Sample\test_fib.txt";
             string scriptBuffer = File.ReadAllText(scriptPath, Encoding.UTF8);
 
+            Console.WriteLine("O2 Version:" + Oxygenbasic.Version());
+
             Oxygenbasic.O2Basic(scriptBuffer);
+            Oxygenbasic.Mode((int) Enums.Mode.Asciiz);
 
             if (Oxygenbasic.Errno() == 0)
             {
                 Oxygenbasic.Exec();
+            }
+            else
+            {
+                Console.WriteLine("Error: " + Oxygenbasic.Error());
             }
 
             Console.ReadKey();
