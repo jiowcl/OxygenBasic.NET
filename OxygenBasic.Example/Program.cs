@@ -21,7 +21,11 @@ namespace OxygenBasic.Example
             string scriptBuffer = File.ReadAllText(scriptPath, Encoding.UTF8);
 
             Oxygenbasic.O2Basic(scriptBuffer);
-            Oxygenbasic.Exec();
+
+            if (Oxygenbasic.Errno() == 0)
+            {
+                Oxygenbasic.Exec();
+            }
 
             Console.ReadKey();
         }
