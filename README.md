@@ -3,6 +3,7 @@
 .Net Wrapper for OxygenBasic Programming Language.
 
 ![GitHub](https://img.shields.io/github/license/jiowcl/MQL-Quotes.svg)
+![Nuget](https://img.shields.io/nuget/v/OxygenBasic.NET)
 
 # Environment
 
