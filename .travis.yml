@@ -1,4 +1,7 @@
 language: csharp
 sudo: required
+dotnet: 2.0.0
 mono: none
-solution: "./OxygenBasic.NET.sln"
+script:
+ - cd "./OxygenBasic.NET"
+ - dotnet build
