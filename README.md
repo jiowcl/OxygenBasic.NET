@@ -8,8 +8,14 @@
 
 ## Environment
 
--  Windows 7 above (recommend)
--  OxygenBasic 0.23
+- Windows 7 above (recommend)
+- OxygenBasic 0.23
+
+## NuGet Installation
+
+```powershell
+PM> Install-Package OxygenBasic.NET
+```
 
 ## How to Build
 
@@ -35,7 +41,7 @@ Code released under the MIT license.
 
 ## TODO
 
--  More examples
+- More examples
 
 ## Donation
 
