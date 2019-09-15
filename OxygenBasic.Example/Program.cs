@@ -8,7 +8,7 @@ namespace OxygenBasic.Example
     /// <summary>
     /// Program
     /// </summary>
-    class Program
+    public class Program
     {
         /// <summary>
         /// Main
