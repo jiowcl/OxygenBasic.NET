@@ -4,6 +4,7 @@
 
 ![GitHub](https://img.shields.io/github/license/jiowcl/MQL-Quotes.svg)
 ![Nuget](https://img.shields.io/nuget/v/OxygenBasic.NET)
+![Travis-Ci](https://travis-ci.com/jiowcl/OxygenBasic.NET.svg?branch=master)
 
 ## Environment
 
