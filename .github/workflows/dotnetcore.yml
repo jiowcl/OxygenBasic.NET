@@ -14,6 +14,6 @@ jobs:
       with:
         dotnet-version: 2.0.0
     - name: Build with dotnet
-      run:
-        - cd "./OxygenBasic.NET"
-        - dotnet build
+      run: |
+        cd "./OxygenBasic.NET"
+        dotnet build
