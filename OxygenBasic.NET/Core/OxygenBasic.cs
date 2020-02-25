@@ -12,7 +12,7 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="s"></param>
         /// <returns>Returns string.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_abst", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("oxygen.dll", EntryPoint = "o2_abst", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         [return: MarshalAs(UnmanagedType.AnsiBStr)]
         public static extern string Abst([MarshalAs(UnmanagedType.AnsiBStr)] string s);
 
@@ -21,7 +21,7 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="s"></param>
         /// <returns>Returns uint.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_basic", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("oxygen.dll", EntryPoint = "o2_basic", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         public static extern uint O2Basic([MarshalAs(UnmanagedType.AnsiBStr)] string s);
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="p"></param>
         /// <returns>Returns uint.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_exec", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("oxygen.dll", EntryPoint = "o2_exec", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         public static extern uint Exec(uint p = 0);
 
         /// <summary>
@@ -37,21 +37,21 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="n"></param>
         /// <returns>Returns uint.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_buf", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("oxygen.dll", EntryPoint = "o2_buf", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         public static extern uint Buf(int n);
 
         /// <summary>
         /// Errno
         /// </summary>
         /// <returns>Returns int.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_errno", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("oxygen.dll", EntryPoint = "o2_errno", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         public static extern int Errno();
 
         /// <summary>
         /// Error
         /// </summary>
         /// <returns>Returns string.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_error", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("oxygen.dll", EntryPoint = "o2_error", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         [return: MarshalAs(UnmanagedType.AnsiBStr)]
         public static extern string Error();
 
@@ -59,14 +59,14 @@ namespace OxygenBasic.NET.Core
         /// Len
         /// </summary>
         /// <returns>Returns int.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_len", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("oxygen.dll", EntryPoint = "o2_len", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         public static extern int Len();
 
         /// <summary>
         /// Lib
         /// </summary>
         /// <returns>Returns uint.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_lib", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("oxygen.dll", EntryPoint = "o2_lib", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         public static extern uint Lib();
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="s"></param>
         /// <returns>Returns uint.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_link", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("oxygen.dll", EntryPoint = "o2_link", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         public static extern uint Link([MarshalAs(UnmanagedType.AnsiBStr)] string s);
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="m"></param>
         /// <returns>Returns void.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_mode", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("oxygen.dll", EntryPoint = "o2_mode", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         public static extern void Mode(int m);
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="m"></param>
         /// <returns>Returns void.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_pathcall", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("oxygen.dll", EntryPoint = "o2_pathcall", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         public static extern void Pathcall(uint m);
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="s"></param>
         /// <returns>Returns string.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_prep", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("oxygen.dll", EntryPoint = "o2_prep", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         [return: MarshalAs(UnmanagedType.AnsiBStr)]
         public static extern string Prep([MarshalAs(UnmanagedType.AnsiBStr)] string s);
 
@@ -107,14 +107,14 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="m"></param>
         /// <returns>Returns void.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_varcall", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("oxygen.dll", EntryPoint = "o2_varcall", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         public static extern void Varcall(uint m);
 
         /// <summary>
         /// Version
         /// </summary>
         /// <returns>Returns string.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_version", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("oxygen.dll", EntryPoint = "o2_version", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         [return: MarshalAs(UnmanagedType.AnsiBStr)]
         public static extern string Version();
 
@@ -123,7 +123,7 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="s"></param>
         /// <returns>Returns string.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_view", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("oxygen.dll", EntryPoint = "o2_view", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         [return: MarshalAs(UnmanagedType.AnsiBStr)]
         public static extern string View([MarshalAs(UnmanagedType.AnsiBStr)] string s);
     }
