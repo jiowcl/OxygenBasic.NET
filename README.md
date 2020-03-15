@@ -2,7 +2,7 @@
 
 .Net Wrapper for OxygenBasic Programming Language.
 
-![GitHub](https://img.shields.io/github/license/jiowcl/MQL-Quotes.svg)
+![GitHub](https://img.shields.io/github/license/jiowcl/OxygenBasic.NET)
 ![Nuget](https://img.shields.io/nuget/v/OxygenBasic.NET)
 ![Travis-Ci](https://travis-ci.com/jiowcl/OxygenBasic.NET.svg?branch=master)
 
@@ -35,7 +35,7 @@ Console.ReadKey();
 
 ## License
 
-Copyright (c) 2017-2019 Ji-Feng Tsai.  
+Copyright (c) 2017-2020 Ji-Feng Tsai.  
 
 Code released under the MIT license.
 
