@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Inwazy Technology")]
 [assembly: AssemblyProduct("OxygenBasic.Example")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("ji-Feng Tsai")]
 [assembly: AssemblyCulture("")]
 
