@@ -9,6 +9,7 @@
         public enum Mode : int
         {
             Asciiz = 1,
+            Wchar = 2,
             Bstring = 9
         }
     }
