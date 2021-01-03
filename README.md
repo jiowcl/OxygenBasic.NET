@@ -35,7 +35,7 @@ Console.ReadKey();
 
 ## License
 
-Copyright (c) 2017-2020 Ji-Feng Tsai.  
+Copyright (c) 2017-2021 Ji-Feng Tsai.  
 
 Code released under the MIT license.
 
@@ -45,7 +45,7 @@ Code released under the MIT license.
 
 ## Donation
 
-If this application help you reduce time to trading, you can give me a cup of coffee :)
+If this application help you reduce time to coding, you can give me a cup of coffee :)
 
 [![paypal](https://www.paypalobjects.com/en_US/TW/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3RNMD6Q3B495N&source=url)
 
