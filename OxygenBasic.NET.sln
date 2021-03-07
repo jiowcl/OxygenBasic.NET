@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OxygenBasic.NET", "OxygenBa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OxygenBasic.Example", "OxygenBasic.Example\OxygenBasic.Example.csproj", "{055658DE-C23B-4019-ABAD-B547079C5A5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OxygenBasic.NETTests", "OxygenBasic.NETTests\OxygenBasic.NETTests.csproj", "{37AE8738-9F0D-4755-8E3E-F3376AB115E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OxygenBasic.NETTests", "OxygenBasic.NETTests\OxygenBasic.NETTests.csproj", "{37AE8738-9F0D-4755-8E3E-F3376AB115E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
