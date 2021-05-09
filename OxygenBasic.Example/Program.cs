@@ -1,4 +1,7 @@
-﻿using OxygenBasic.NET.Core;
+﻿// OxygenBasic.NET - OxygenBasic Programming Language for .NET
+// Copyright (c) 2019 Jiowcl. All rights reserved.
+
+using OxygenBasic.NET.Core;
 using System;
 using System.IO;
 using System.Text;

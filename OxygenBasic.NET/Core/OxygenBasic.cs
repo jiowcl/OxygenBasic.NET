@@ -1,4 +1,7 @@
-﻿using System.Runtime.InteropServices;
+﻿// OxygenBasic.NET - OxygenBasic Programming Language for .NET
+// Copyright (c) 2019 Jiowcl. All rights reserved.
+
+using System.Runtime.InteropServices;
 
 namespace OxygenBasic.NET.Core
 {

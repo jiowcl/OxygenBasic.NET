@@ -1,4 +1,7 @@
-﻿namespace OxygenBasic.NET.Core
+﻿// OxygenBasic.NET - OxygenBasic Programming Language for .NET
+// Copyright (c) 2019 Jiowcl. All rights reserved.
+
+namespace OxygenBasic.NET.Core
 {
     /// <summary>
     /// Enums
