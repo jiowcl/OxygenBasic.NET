@@ -10,6 +10,7 @@
 
 - Windows 7 above (recommend)
 - OxygenBasic 0.30
+- .NET Standard 2.0
 
 ## NuGet Installation
 
