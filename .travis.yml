@@ -1,7 +1,7 @@
 language: csharp
-sudo: required
-dotnet: 2.0.0
+dotnet: 5.0
+dist: xenial
 mono: none
 script:
  - cd "./OxygenBasic.NET"
- - dotnet build
+ - dotnet build -f netstandard2.0
