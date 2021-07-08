@@ -8,9 +8,9 @@
 
 ## Environment
 
-- Windows 7 above (recommend)
-- OxygenBasic 0.30
-- .NET Standard 2.1
+- Windows 7 above (recommend)  
+- OxygenBasic 0.30  
+- .NET Standard 2.1  
 
 ## NuGet Installation
 
@@ -37,12 +37,11 @@ Console.ReadKey();
 ## License
 
 Copyright (c) 2017-2021 Ji-Feng Tsai.  
-
-Code released under the MIT license.
+Code released under the MIT license.  
 
 ## TODO
 
-- More examples
+- More examples  
 
 ## Donation
 
