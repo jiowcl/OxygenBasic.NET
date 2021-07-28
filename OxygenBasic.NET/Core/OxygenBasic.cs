@@ -153,9 +153,18 @@ namespace OxygenBasic.NET.Core
         /// <summary>
         /// Exec
         /// </summary>
+        /// <returns>Returns uint.</returns>
+        public static uint Exec()
+        {
+            return ExecNative(0);
+        }
+
+        /// <summary>
+        /// Exec
+        /// </summary>
         /// <param name="p"></param>
         /// <returns>Returns uint.</returns>
-        public static uint Exec(uint p = 0)
+        public static uint Exec(uint p)
         {
             return ExecNative(p);
         }

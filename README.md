@@ -5,6 +5,7 @@
 ![GitHub](https://img.shields.io/github/license/jiowcl/OxygenBasic.NET)
 ![Nuget](https://img.shields.io/nuget/v/OxygenBasic.NET)
 ![Travis-Ci](https://travis-ci.com/jiowcl/OxygenBasic.NET.svg?branch=master)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/06f3d62e7abb41c290f9feeb44bd4827)](https://www.codacy.com/gh/jiowcl/OxygenBasic.NET/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jiowcl/OxygenBasic.NET&amp;utm_campaign=Badge_Grade)
 
 ## Environment
 
