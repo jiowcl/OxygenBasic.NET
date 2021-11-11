@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFrameworks>net6.0-windows;net5.0-windows</TargetFrameworks>
 
     <IsPackable>false</IsPackable>
 
@@ -18,9 +18,21 @@
     <RepositoryUrl>https://github.com/jiowcl/OxygenBasic.NET</RepositoryUrl>
 
     <PackageReleaseNotes>1.0.0</PackageReleaseNotes>
+
+    <PlatformTarget>x86</PlatformTarget>
+
+    <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
 

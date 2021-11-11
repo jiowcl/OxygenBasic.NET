@@ -11,7 +11,7 @@
 
 - Windows 7 above (recommend)  
 - OxygenBasic 0.30  
-- .NET Standard 2.1  
+- .NET 6  
 
 ## NuGet Installation
 
@@ -21,7 +21,7 @@ PM> Install-Package OxygenBasic.NET
 
 ## How to Build
 
-Building requires [Visual Studio 2019 Community](https://visualstudio.microsoft.com/vs/community/) and test under Windows 10.
+Building requires [Visual Studio 2022 Community](https://visualstudio.microsoft.com/vs/community/) and test under Windows 10.
 
 ## Example
 
@@ -38,6 +38,7 @@ Console.ReadKey();
 ## License
 
 Copyright (c) 2017-2021 Ji-Feng Tsai.  
+OxygenBasic Copyright (c) Charles Pegge [OxygenBasic Compiler](https://github.com/Charles-Pegge/OxygenBasic).  
 Code released under the MIT license.  
 
 ## TODO

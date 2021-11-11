@@ -1,7 +1,8 @@
 language: csharp
-dotnet: 5.0
+dotnet: 6.0
 dist: xenial
 mono: none
 script:
  - cd "./OxygenBasic.NET"
- - dotnet build -f netstandard2.1
+ - dotnet build
+# - dotnet build -f netstandard2.1

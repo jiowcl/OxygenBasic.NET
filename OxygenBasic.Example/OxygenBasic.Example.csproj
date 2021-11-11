@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFrameworks>net6.0-windows;net5.0-windows</TargetFrameworks>
     <StartupObject>OxygenBasic.Example.Program</StartupObject>
     <Authors>Jiowcl</Authors>
     <Company>Inwazy Technology</Company>
@@ -12,9 +12,20 @@
     <PackageProjectUrl>https://github.com/jiowcl/OxygenBasic.NET</PackageProjectUrl>
     <RepositoryUrl>https://github.com/jiowcl/OxygenBasic.NET</RepositoryUrl>
     <PackageReleaseNotes>1.0.0</PackageReleaseNotes>
+    <PlatformTarget>x86</PlatformTarget>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
 
@@ -30,6 +41,10 @@
     <None Include="..\LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
 
