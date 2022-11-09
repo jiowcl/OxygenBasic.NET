@@ -10,8 +10,8 @@
 ## Environment
 
 - Windows 7 above (recommend)  
-- OxygenBasic 0.40  
-- .NET 6  
+- OxygenBasic 0.50  
+- .NET 7  
 
 ## NuGet Installation
 
