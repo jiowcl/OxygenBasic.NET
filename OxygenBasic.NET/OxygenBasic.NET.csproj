@@ -1,16 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net7.0-windows;net6.0-windows</TargetFrameworks>
+    <TargetFrameworks>net8.0-windows;net7.0-windows;net6.0-windows</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Copyright>Ji-Feng Tsai</Copyright>
     <Description>.NET Wrapper for OxygenBasic Programming Language.</Description>
     <Company>Inwazy Technology</Company>
     <Authors>Jiowcl</Authors>
     <PackageProjectUrl>https://github.com/jiowcl/OxygenBasic.NET</PackageProjectUrl>
-    <PackageReleaseNotes>1.0.4</PackageReleaseNotes>
+    <PackageReleaseNotes>1.0.5</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
     <RepositoryUrl>https://github.com/jiowcl/OxygenBasic.NET</RepositoryUrl>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
