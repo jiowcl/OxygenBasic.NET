@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net9.0-windows;net8.0-windows</TargetFrameworks>
+    <TargetFrameworks>net10.0-windows;net9.0-windows;net8.0-windows</TargetFrameworks>
     <StartupObject>OxygenBasic.Example.Program</StartupObject>
     <Authors>Jiowcl</Authors>
     <Company>Inwazy Technology</Company>
