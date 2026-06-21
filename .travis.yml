@@ -5,6 +5,10 @@ mono: none
 dotnet:
   - 10.0
 
+before_script:
+  - sudo apt-get update
+  - sudo apt-get install -y libssl-dev
+
 script:
   - cd "./OxygenBasic.NET"
   - dotnet build --configuration Release
