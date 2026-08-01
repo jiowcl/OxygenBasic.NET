@@ -1,5 +1,5 @@
 ﻿// OxygenBasic.NET - OxygenBasic Programming Language for .NET
-// Copyright (c) 2019-2024 Jiowcl. All rights reserved.
+// Copyright (c) 2019-2026 Jiowcl. All rights reserved.
 
 using OxygenBasic.NET.Core;
 using System;
@@ -18,15 +18,17 @@ namespace OxygenBasic.Example
         /// </summary>
         /// <param name="args"></param>
         /// <returns>Returns void.</returns>
-        static void Main(string[] args)
+        static void Main(
+            string[] args)
         {
             string scriptPath = @"Sample\test_fib.txt";
             string scriptBuffer = File.ReadAllText(scriptPath, Encoding.UTF8);
 
+            Oxygenbasic.InitHost();
             Console.WriteLine("O2 Version:" + Oxygenbasic.Version());
 
             Oxygenbasic.O2Basic(scriptBuffer);
-            Oxygenbasic.Mode((int) Enums.Mode.Asciiz);
+            Oxygenbasic.Mode(Enums.Mode.Asciiz);
 
             if (Oxygenbasic.Errno() == 0)
             {

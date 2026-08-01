@@ -1,84 +1,106 @@
 ﻿// OxygenBasic.NET - OxygenBasic Programming Language for .NET
-// Copyright (c) 2019-2024 Jiowcl. All rights reserved.
+// Copyright (c) 2019-2026 Jiowcl. All rights reserved.
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OxygenBasic.NET.Core;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
 namespace OxygenBasic.NET.Core.Tests
 {
-    [TestClass()]
+    /// <summary>
+    /// oxygen.dll keeps process-wide compile state; tests must not run in parallel.
+    /// <c>o2_abst</c> switches the engine into abstract/assembler view and must run last.
+    /// </summary>
+    [TestClass]
+    [DoNotParallelize]
     public class OxygenbasicTests
     {
-        [TestMethod()]
-        public void AbstTest()
+        [TestMethod]
+        public void VersionTest()
         {
-            string result = Oxygenbasic.Abst("int a = 1234");
+            string result = Oxygenbasic.Version();
 
-            Assert.IsNotNull(result);
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result));
         }
 
-        [TestMethod()]
+        [TestMethod]
+        public void LibTest()
+        {
+            uint result = Oxygenbasic.Lib();
+
+            Assert.IsTrue(result > 0);
+        }
+
+        [TestMethod]
+        public void InitHostTest()
+        {
+            Oxygenbasic.InitHost();
+            Oxygenbasic.Mode(Enums.Mode.Bstring);
+
+            string version = Oxygenbasic.Version();
+
+            Assert.IsFalse(string.IsNullOrWhiteSpace(version));
+        }
+
+        [TestMethod]
         public void O2BasicTest()
         {
             uint result = Oxygenbasic.O2Basic("int a = 1234");
 
             Assert.IsTrue(result > 0);
+            Assert.AreEqual(0, Oxygenbasic.Errno());
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ExecTest()
         {
             string scriptPath = @"Sample\test.txt";
             string scriptBuffer = File.ReadAllText(scriptPath, Encoding.UTF8);
 
+            Oxygenbasic.InitHost();
             Oxygenbasic.O2Basic(scriptBuffer);
-            Oxygenbasic.Mode((int)Enums.Mode.Asciiz);
+            Oxygenbasic.Mode(Enums.Mode.Asciiz);
 
             uint result = Oxygenbasic.Exec();
 
             Assert.IsTrue(result > 0);
+            Assert.AreEqual(0, Oxygenbasic.Errno());
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void BufTest()
         {
             string scriptPath = @"Sample\test.txt";
             string scriptBuffer = File.ReadAllText(scriptPath, Encoding.UTF8);
 
             Oxygenbasic.O2Basic(scriptBuffer);
-            Oxygenbasic.Mode((int)Enums.Mode.Asciiz);
+            Oxygenbasic.Mode(Enums.Mode.Asciiz);
 
             uint result = Oxygenbasic.Buf(0);
 
             Assert.IsTrue(result > 0);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ErrnoTest()
         {
             string scriptPath = @"Sample\test.txt";
             string scriptBuffer = File.ReadAllText(scriptPath, Encoding.UTF8);
 
             Oxygenbasic.O2Basic(scriptBuffer);
-            Oxygenbasic.Mode((int)Enums.Mode.Asciiz);
+            Oxygenbasic.Mode(Enums.Mode.Asciiz);
 
-            int result = Oxygenbasic.Errno();
-
-            Assert.IsTrue(result == 0);
+            Assert.AreEqual(0, Oxygenbasic.Errno());
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ErrorTest()
         {
             string scriptPath = @"Sample\test.txt";
             string scriptBuffer = File.ReadAllText(scriptPath, Encoding.UTF8);
 
             Oxygenbasic.O2Basic(scriptBuffer);
-            Oxygenbasic.Mode((int)Enums.Mode.Asciiz);
+            Oxygenbasic.Mode(Enums.Mode.Asciiz);
 
             string result = null;
 
@@ -90,26 +112,88 @@ namespace OxygenBasic.NET.Core.Tests
             Assert.IsNull(result);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void LenTest()
         {
             string scriptPath = @"Sample\test.txt";
             string scriptBuffer = File.ReadAllText(scriptPath, Encoding.UTF8);
 
             Oxygenbasic.O2Basic(scriptBuffer);
-            Oxygenbasic.Mode((int)Enums.Mode.Asciiz);
+            Oxygenbasic.Mode(Enums.Mode.Asciiz);
 
             int result = Oxygenbasic.Len();
 
             Assert.IsTrue(result > 0);
         }
 
-        [TestMethod()]
-        public void LibTest()
+        [TestMethod]
+        public void LinkTest()
         {
-            uint result = Oxygenbasic.Lib();
+            uint result = Oxygenbasic.Link("int a = 1234");
 
             Assert.IsTrue(result > 0);
+        }
+
+        [TestMethod]
+        public void EvalTest()
+        {
+            uint result = Oxygenbasic.Eval("int a = 1234");
+
+            Assert.IsTrue(result > 0);
+        }
+
+        [TestMethod]
+        public void PrepTest()
+        {
+            string result = Oxygenbasic.Prep("int a = 1234");
+
+            Assert.IsNotNull(result);
+        }
+
+        [TestMethod]
+        public void ViewTest()
+        {
+            string result = Oxygenbasic.View("int a = 1234");
+
+            Assert.IsNotNull(result);
+        }
+
+        [TestMethod]
+        public void PathcallResolverTest()
+        {
+            Oxygenbasic.ClearHostCallbacks();
+            Oxygenbasic.InitHost();
+
+            OxygenPathResolver resolver = path => path;
+            Oxygenbasic.Pathcall(resolver);
+
+            Oxygenbasic.ClearHostCallbacks();
+            Assert.IsNotNull(resolver);
+        }
+
+        [TestMethod]
+        public void VarcallResolverTest()
+        {
+            Oxygenbasic.ClearHostCallbacks();
+            Oxygenbasic.InitHost();
+
+            OxygenVarResolver resolver = name => System.IntPtr.Zero;
+            Oxygenbasic.Varcall(resolver);
+
+            Oxygenbasic.ClearHostCallbacks();
+            Assert.IsNotNull(resolver);
+        }
+
+        /// <summary>
+        /// Must run after compile/exec tests: <c>o2_abst</c> leaves oxygen.dll in abstract mode.
+        /// </summary>
+        [TestMethod]
+        public void ZzzAbstTest()
+        {
+            string result = Oxygenbasic.Abst("int a = 1234");
+
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.Length > 0);
         }
     }
 }

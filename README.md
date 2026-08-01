@@ -11,7 +11,7 @@
 
 - Windows 10 above (recommend)  
 - OxygenBasic 0.90 
-- .NET 10  
+- .NET 8 / .NET 9 / .NET 10 (Windows, x86)  
 
 ## NuGet Installation
 
@@ -29,6 +29,7 @@ Building requires [Visual Studio 2026 Community](https://visualstudio.microsoft.
 string scriptPath = @"Sample\test_fib.txt";
 string scriptBuffer = File.ReadAllText(scriptPath, Encoding.UTF8);
 
+Oxygenbasic.InitHost();
 Oxygenbasic.O2Basic(scriptBuffer);
 Oxygenbasic.Exec();
 

@@ -1,6 +1,7 @@
 ﻿// OxygenBasic.NET - OxygenBasic Programming Language for .NET
 // Copyright (c) 2019-2026 Jiowcl. All rights reserved.
 
+using System;
 using System.Runtime.InteropServices;
 
 namespace OxygenBasic.NET.Core
@@ -14,62 +15,64 @@ namespace OxygenBasic.NET.Core
         /// AbstNative
         /// </summary>
         /// <param name="s"></param>
-        /// <returns>Returns string.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_abst", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
-        [return: MarshalAs(UnmanagedType.AnsiBStr)]
-        private static extern string AbstNative([MarshalAs(UnmanagedType.AnsiBStr)] string s);
+        /// <returns>Returns IntPtr.</returns>
+        [DllImport("oxygen.dll", EntryPoint = "o2_abst", CallingConvention = CallingConvention.StdCall)]
+        private static extern IntPtr AbstNative(
+            IntPtr s);
 
         /// <summary>
         /// O2BasicNative
         /// </summary>
         /// <param name="s"></param>
         /// <returns>Returns uint.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_basic", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
-        private static extern uint O2BasicNative([MarshalAs(UnmanagedType.AnsiBStr)] string s);
+        [DllImport("oxygen.dll", EntryPoint = "o2_basic", CallingConvention = CallingConvention.StdCall)]
+        private static extern uint O2BasicNative(
+            IntPtr s);
 
         /// <summary>
         /// ExecNative
         /// </summary>
         /// <param name="p"></param>
         /// <returns>Returns uint.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_exec", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
-        private static extern uint ExecNative(uint p = 0);
+        [DllImport("oxygen.dll", EntryPoint = "o2_exec", CallingConvention = CallingConvention.StdCall)]
+        private static extern uint ExecNative(
+            uint p = 0);
 
         /// <summary>
         /// BufNative
         /// </summary>
         /// <param name="n"></param>
         /// <returns>Returns uint.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_buf", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
-        private static extern uint BufNative(int n);
+        [DllImport("oxygen.dll", EntryPoint = "o2_buf", CallingConvention = CallingConvention.StdCall)]
+        private static extern uint BufNative(
+            int n);
 
         /// <summary>
         /// ErrnoNative
         /// </summary>
         /// <returns>Returns int.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_errno", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
+        [DllImport("oxygen.dll", EntryPoint = "o2_errno", CallingConvention = CallingConvention.StdCall)]
         private static extern int ErrnoNative();
 
         /// <summary>
         /// ErrorNative
         /// </summary>
-        /// <returns>Returns string.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_error", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
-        [return: MarshalAs(UnmanagedType.AnsiBStr)]
-        private static extern string ErrorNative();
+        /// <returns>Returns IntPtr.</returns>
+        [DllImport("oxygen.dll", EntryPoint = "o2_error", CallingConvention = CallingConvention.StdCall)]
+        private static extern IntPtr ErrorNative();
 
         /// <summary>
         /// LenNative
         /// </summary>
         /// <returns>Returns int.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_len", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
+        [DllImport("oxygen.dll", EntryPoint = "o2_len", CallingConvention = CallingConvention.StdCall)]
         private static extern int LenNative();
 
         /// <summary>
         /// LibNative
         /// </summary>
         /// <returns>Returns uint.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_lib", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
+        [DllImport("oxygen.dll", EntryPoint = "o2_lib", CallingConvention = CallingConvention.StdCall)]
         private static extern uint LibNative();
 
         /// <summary>
@@ -77,15 +80,16 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="s"></param>
         /// <returns>Returns uint.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_link", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
-        private static extern uint LinkNative([MarshalAs(UnmanagedType.AnsiBStr)] string s);
+        [DllImport("oxygen.dll", EntryPoint = "o2_link", CallingConvention = CallingConvention.StdCall)]
+        private static extern uint LinkNative(
+            IntPtr s);
 
         /// <summary>
         /// ModeNative
         /// </summary>
         /// <param name="m"></param>
         /// <returns>Returns void.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_mode", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
+        [DllImport("oxygen.dll", EntryPoint = "o2_mode", CallingConvention = CallingConvention.StdCall)]
         private static extern void ModeNative(int m);
 
         /// <summary>
@@ -93,51 +97,91 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="m"></param>
         /// <returns>Returns void.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_pathcall", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
-        private static extern void PathcallNative(uint m);
+        [DllImport("oxygen.dll", EntryPoint = "o2_pathcall", CallingConvention = CallingConvention.StdCall)]
+        private static extern void PathcallNative(
+            IntPtr m);
 
         /// <summary>
         /// PrepNative
         /// </summary>
         /// <param name="s"></param>
-        /// <returns>Returns string.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_prep", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
-        [return: MarshalAs(UnmanagedType.AnsiBStr)]
-        private static extern string PrepNative([MarshalAs(UnmanagedType.AnsiBStr)] string s);
+        /// <returns>Returns IntPtr.</returns>
+        [DllImport("oxygen.dll", EntryPoint = "o2_prep", CallingConvention = CallingConvention.StdCall)]
+        private static extern IntPtr PrepNative(
+            IntPtr s);
 
         /// <summary>
         /// VarcallNative
         /// </summary>
         /// <param name="m"></param>
         /// <returns>Returns void.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_varcall", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
-        private static extern void VarcallNative(uint m);
+        [DllImport("oxygen.dll", EntryPoint = "o2_varcall", CallingConvention = CallingConvention.StdCall)]
+        private static extern void VarcallNative(
+            IntPtr m);
 
         /// <summary>
         /// VersionNative
         /// </summary>
-        /// <returns>Returns string.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_version", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
-        [return: MarshalAs(UnmanagedType.AnsiBStr)]
-        private static extern string VersionNative();
+        /// <returns>Returns IntPtr.</returns>
+        [DllImport("oxygen.dll", EntryPoint = "o2_version", CallingConvention = CallingConvention.StdCall)]
+        private static extern IntPtr VersionNative();
 
         /// <summary>
         /// ViewNative
         /// </summary>
         /// <param name="s"></param>
-        /// <returns>Returns string.</returns>
-        [DllImport("oxygen.dll", EntryPoint = "o2_view", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
-        [return: MarshalAs(UnmanagedType.AnsiBStr)]
-        private static extern string ViewNative([MarshalAs(UnmanagedType.AnsiBStr)] string s);
+        /// <returns>Returns IntPtr.</returns>
+        [DllImport("oxygen.dll", EntryPoint = "o2_view", CallingConvention = CallingConvention.StdCall)]
+        private static extern IntPtr ViewNative(
+            IntPtr s);
+
+        /// <summary>
+        /// Initialize the Oxygen host for .NET use (bstring UTF-8 mode).
+        /// Matches thinBasic Oxygen module default <c>o2_mode(9)</c>.
+        /// </summary>
+        public static void InitHost()
+        {
+            Mode(Enums.Mode.Bstring);
+        }
+
+        /// <summary>
+        /// Allocate a UTF-8 BSTR for an <see cref="OxygenPathCallback"/> return value.
+        /// Ownership is transferred to oxygen.dll; do not free the pointer.
+        /// </summary>
+        /// <param name="value">The string to return.</param>
+        /// <returns>UTF-8 BSTR pointer.</returns>
+        public static IntPtr AllocReturnString(
+            string value)
+        {
+            return AnsiBStrMarshal.Alloc(value);
+        }
+
+        /// <summary>
+        /// Clears rooted Pathcall/Varcall delegates.
+        /// </summary>
+        public static void ClearHostCallbacks()
+        {
+            HostCallbackTable.Clear();
+        }
 
         /// <summary>
         /// Abst
         /// </summary>
         /// <param name="s"></param>
         /// <returns>Returns string.</returns>
-        public static string Abst(string s)
+        public static string Abst(
+            string s)
         {
-            return AbstNative(s);
+            IntPtr p = AnsiBStrMarshal.Alloc(s);
+
+            try
+            {
+                return AnsiBStrMarshal.PtrToString(AbstNative(p));
+            }
+            finally
+            {
+                AnsiBStrMarshal.Free(p);
+            }
         }
 
         /// <summary>
@@ -145,9 +189,19 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="s"></param>
         /// <returns>Returns uint.</returns>
-        public static uint O2Basic(string s)
+        public static uint O2Basic(
+            string s)
         {
-            return O2BasicNative(s);
+            IntPtr p = AnsiBStrMarshal.Alloc(s);
+
+            try
+            {
+                return O2BasicNative(p);
+            }
+            finally
+            {
+                AnsiBStrMarshal.Free(p);
+            }
         }
 
         /// <summary>
@@ -164,7 +218,8 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="p"></param>
         /// <returns>Returns uint.</returns>
-        public static uint Exec(uint p)
+        public static uint Exec(
+            uint p)
         {
             return ExecNative(p);
         }
@@ -174,7 +229,8 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="n"></param>
         /// <returns>Returns uint.</returns>
-        public static uint Buf(int n)
+        public static uint Buf(
+            int n)
         {
             return BufNative(n);
         }
@@ -194,7 +250,7 @@ namespace OxygenBasic.NET.Core
         /// <returns>Returns string.</returns>
         public static string Error()
         {
-            return ErrorNative();
+            return AnsiBStrMarshal.PtrToString(ErrorNative());
         }
 
         /// <summary>
@@ -220,9 +276,30 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="s"></param>
         /// <returns>Returns uint.</returns>
-        public static uint Link(string s)
+        public static uint Link(
+            string s)
         {
-            return LinkNative(s);
+            IntPtr p = AnsiBStrMarshal.Alloc(s);
+
+            try
+            {
+                return LinkNative(p);
+            }
+            finally
+            {
+                AnsiBStrMarshal.Free(p);
+            }
+        }
+
+        /// <summary>
+        /// Eval (alias of <see cref="Link"/>; matches thinBasic <c>O2_Eval</c>).
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns>Returns uint.</returns>
+        public static uint Eval(
+            string s)
+        {
+            return Link(s);
         }
 
         /// <summary>
@@ -230,19 +307,67 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="m"></param>
         /// <returns>Returns void.</returns>
-        public static void Mode(int m)
+        public static void Mode(
+            int m)
         {
             ModeNative(m);
         }
 
         /// <summary>
-        /// Pathcall
+        /// Mode
         /// </summary>
         /// <param name="m"></param>
         /// <returns>Returns void.</returns>
-        public static void Pathcall(uint m)
+        public static void Mode(
+            Enums.Mode m)
         {
-            PathcallNative(m);
+            ModeNative((int)m);
+        }
+
+        /// <summary>
+        /// Pathcall
+        /// </summary>
+        /// <param name="m">Native function pointer.</param>
+        /// <returns>Returns void.</returns>
+        public static void Pathcall(
+            uint m)
+        {
+            PathcallNative(new IntPtr(unchecked((int)m)));
+        }
+
+        /// <summary>
+        /// Pathcall
+        /// </summary>
+        /// <param name="callback">Native path callback.</param>
+        /// <returns>Returns void.</returns>
+        public static void Pathcall(
+            OxygenPathCallback callback)
+        {
+            IntPtr ptr = HostCallbackTable.Add(callback);
+            PathcallNative(ptr);
+        }
+
+        /// <summary>
+        /// Pathcall with a managed path resolver.
+        /// </summary>
+        /// <param name="resolver">Managed path resolver.</param>
+        /// <returns>Returns void.</returns>
+        public static void Pathcall(
+            OxygenPathResolver resolver)
+        {
+            if (resolver == null)
+            {
+                throw new ArgumentNullException(nameof(resolver));
+            }
+
+            OxygenPathCallback callback = pathPtr =>
+            {
+                string path = Marshal.PtrToStringUTF8(pathPtr) ?? string.Empty;
+
+                return AllocReturnString(resolver(path));
+            };
+
+            Pathcall(callback);
         }
 
         /// <summary>
@@ -250,19 +375,64 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="s"></param>
         /// <returns>Returns string.</returns>
-        public static string Prep(string s)
+        public static string Prep(
+            string s)
         {
-            return PrepNative(s);
+            IntPtr p = AnsiBStrMarshal.Alloc(s);
+
+            try
+            {
+                return AnsiBStrMarshal.PtrToString(PrepNative(p));
+            }
+            finally
+            {
+                AnsiBStrMarshal.Free(p);
+            }
         }
 
         /// <summary>
         /// Varcall
         /// </summary>
-        /// <param name="m"></param>
+        /// <param name="m">Native function pointer.</param>
         /// <returns>Returns void.</returns>
-        public static void Varcall(uint m)
+        public static void Varcall(
+            uint m)
         {
-            VarcallNative(m);
+            VarcallNative(new IntPtr(unchecked((int)m)));
+        }
+
+        /// <summary>
+        /// Varcall
+        /// </summary>
+        /// <param name="callback">Native variable callback.</param>
+        /// <returns>Returns void.</returns>
+        public static void Varcall(
+            OxygenVarCallback callback)
+        {
+            IntPtr ptr = HostCallbackTable.Add(callback);
+            VarcallNative(ptr);
+        }
+
+        /// <summary>
+        /// Varcall with a managed variable resolver.
+        /// </summary>
+        /// <param name="resolver">Managed variable resolver.</param>
+        /// <returns>Returns void.</returns>
+        public static void Varcall(
+            OxygenVarResolver resolver)
+        {
+            if (resolver == null)
+            {
+                throw new ArgumentNullException(nameof(resolver));
+            }
+
+            OxygenVarCallback callback = namePtr =>
+            {
+                string name = Marshal.PtrToStringUTF8(namePtr) ?? string.Empty;
+                return resolver(name);
+            };
+
+            Varcall(callback);
         }
 
         /// <summary>
@@ -271,7 +441,7 @@ namespace OxygenBasic.NET.Core
         /// <returns>Returns string.</returns>
         public static string Version()
         {
-            return VersionNative();
+            return AnsiBStrMarshal.PtrToString(VersionNative());
         }
 
         /// <summary>
@@ -279,9 +449,19 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="s"></param>
         /// <returns>Returns string.</returns>
-        public static string View(string s)
+        public static string View(
+            string s)
         {
-            return ViewNative(s);
+            IntPtr p = AnsiBStrMarshal.Alloc(s);
+
+            try
+            {
+                return AnsiBStrMarshal.PtrToString(ViewNative(p));
+            }
+            finally
+            {
+                AnsiBStrMarshal.Free(p);
+            }
         }
     }
 }
