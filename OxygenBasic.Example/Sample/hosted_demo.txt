@@ -1,0 +1,18 @@
+' Hosted OxygenBasic demo for .NET
+' %app_includepath% is resolved by Oxygenbasic.Pathcall on the host.
+' {{...}} tokens are replaced by Program.cs with pinned .NET addresses.
+
+includepath "%app_includepath%"
+include "math_helpers.inc"
+
+sys pHostCounter = {{HOST_COUNTER_PTR}}
+sys pFibResult = {{HOST_FIB_PTR}}
+sys pAddResult = {{HOST_ADD_PTR}}
+
+dim as int hostCounter at pHostCounter
+dim as int fibResult at pFibResult
+dim as int addResult at pAddResult
+
+fibResult = Fibonacci(10)
+addResult = Add(40, 2)
+hostCounter = hostCounter + 7

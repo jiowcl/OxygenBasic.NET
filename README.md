@@ -25,16 +25,24 @@ Building requires [Visual Studio 2026 Community](https://visualstudio.microsoft.
 
 ## Example
 
+Hosted script with include-path callback and shared .NET memory (see `OxygenBasic.Example`):
+
 ```csharp
-string scriptPath = @"Sample\test_fib.txt";
-string scriptBuffer = File.ReadAllText(scriptPath, Encoding.UTF8);
-
 Oxygenbasic.InitHost();
-Oxygenbasic.O2Basic(scriptBuffer);
-Oxygenbasic.Exec();
+Oxygenbasic.Pathcall(path => /* resolve %app_includepath% to Sample\inc */);
+Oxygenbasic.Varcall(name => /* optional host variable lookup */);
 
-Console.ReadKey();
+// Script uses: includepath "%app_includepath%" / include "math_helpers.inc"
+// and dim as int hostCounter at <pinned .NET address>
+Oxygenbasic.O2Basic(script);
+if (Oxygenbasic.Errno() == 0)
+{
+    Oxygenbasic.Exec();
+}
 ```
+
+Files: `Sample\hosted_demo.txt`, `Sample\inc\math_helpers.inc`.  
+A simpler Fibonacci-only script remains at `Sample\test_fib.txt`.
 
 ## License
 
@@ -42,9 +50,6 @@ Copyright (c) 2017-2026 Ji-Feng Tsai.
 OxygenBasic Copyright (c) Charles Pegge [OxygenBasic Compiler](https://github.com/Charles-Pegge/OxygenBasic).  
 Code released under the MIT license.  
 
-## TODO
-
-- More examples  
 
 ## Donation
 
