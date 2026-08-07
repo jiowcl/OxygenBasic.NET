@@ -14,35 +14,64 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Setup .NET
+    # x64 SDK for building; x86 host/runtime required to execute PlatformTarget=x86
+    # test hosts (otherwise hostfxr.dll fails with 0x800700C1 BAD_EXE_FORMAT).
+    - name: Setup .NET x64
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: |
           8.0.x
           9.0.x
           10.0.x
+        architecture: x64
+
+    - name: Setup .NET x86
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: |
+          8.0.x
+          9.0.x
+          10.0.x
+        architecture: x86
+
+    - name: Resolve x86 dotnet host
+      id: dotnet-x86
+      shell: pwsh
+      run: |
+        $dotnetRootX86 = Join-Path ${env:ProgramFiles(x86)} "dotnet"
+        $dotnetX86 = Join-Path $dotnetRootX86 "dotnet.exe"
+        if (-not (Test-Path $dotnetX86)) {
+          throw "x86 dotnet host not found at $dotnetX86"
+        }
+        & $dotnetX86 --info
+        "dotnet-x86=$dotnetX86" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+        "dotnet-root-x86=$dotnetRootX86" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
 
     - name: Build
       run: dotnet build OxygenBasic.NET.sln --configuration Release -p:Platform=x86
 
     - name: Test (net8 / net9 / net10)
-      run: >
-        dotnet test OxygenBasic.NETTests/OxygenBasic.NETTests.csproj
-        --configuration Release
-        -p:Platform=x86
-        --no-build
-        --verbosity normal
+      shell: pwsh
+      env:
+        DOTNET_ROOT: ${{ steps.dotnet-x86.outputs.dotnet-root-x86 }}
+      run: |
+        # 32-bit testhost must load x86 hostfxr (not Program Files\dotnet x64).
+        [Environment]::SetEnvironmentVariable("DOTNET_ROOT(x86)", $env:DOTNET_ROOT)
+        & "${{ steps.dotnet-x86.outputs.dotnet-x86 }}" test OxygenBasic.NETTests/OxygenBasic.NETTests.csproj `
+          --configuration Release `
+          -p:Platform=x86 `
+          --no-build `
+          --verbosity normal
 
     - name: Run hosted example (net10)
       shell: pwsh
+      env:
+        DOTNET_ROOT: ${{ steps.dotnet-x86.outputs.dotnet-root-x86 }}
       run: |
+        [Environment]::SetEnvironmentVariable("DOTNET_ROOT(x86)", $env:DOTNET_ROOT)
         $dll = "OxygenBasic.Example/bin/x86/Release/net10.0-windows/OxygenBasic.Example.dll"
         if (-not (Test-Path $dll)) { throw "Example not found: $dll" }
-        $dotnetX86 = Join-Path ${env:ProgramFiles(x86)} "dotnet\dotnet.exe"
-        if (-not (Test-Path $dotnetX86)) {
-          throw "x86 dotnet host not found at $dotnetX86 (required to run PlatformTarget=x86)"
-        }
-        "" | & $dotnetX86 exec $dll
+        "" | & "${{ steps.dotnet-x86.outputs.dotnet-x86 }}" exec $dll
 
   build-x64:
     name: Windows x64 (build)
@@ -58,6 +87,7 @@ jobs:
           8.0.x
           9.0.x
           10.0.x
+        architecture: x64
 
     - name: Build
       run: dotnet build OxygenBasic.NET.sln --configuration Release -p:Platform=x64
