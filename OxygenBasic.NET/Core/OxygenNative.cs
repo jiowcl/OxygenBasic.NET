@@ -11,6 +11,10 @@ namespace OxygenBasic.NET.Core
     /// <summary>
     /// Resolves <c>oxygen.dll</c> DllImports to <c>oxygen.dll</c> (x86) or <c>oxygen64.dll</c> (x64).
     /// </summary>
+    /// <remarks>
+    /// Upstream <c>oxygen64.dll</c> currently raises ACCESS_VIOLATION inside <c>DllMain</c>
+    /// on tested Windows 11 hosts. Details: <c>docs/oxygen64-x64-runtime.md</c>.
+    /// </remarks>
     internal static class OxygenNative
     {
         // The name of the import library.

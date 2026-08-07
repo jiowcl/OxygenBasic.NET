@@ -14,14 +14,14 @@
 - .NET 8 / .NET 9 / .NET 10 (Windows, **x86 and x64**)  
 - Native: `oxygen.dll` (x86) / `oxygen64.dll` (x64), selected at runtime via `DllImport` resolver  
 
-> **Note:** The current upstream `oxygen64.dll` may fault on `LoadLibrary` (access violation) on some Windows hosts. Prefer **x86** for runtime until a fixed native binary is available. The managed x64 build and packaging are ready.
+> **x64 runtime:** Prefer x86 for execution today. See [docs/oxygen64-x64-runtime.md](docs/oxygen64-x64-runtime.md) for the `oxygen64.dll` `DllMain` AV investigation.
 
 ## CI
 
 GitHub Actions runs on `windows-latest`:
 
 - **x86**: build + test (net8/9/10) + hosted example  
-- **x64**: build (native tests skipped until `oxygen64.dll` loads cleanly)
+- **x64**: build only (native tests skipped; see [docs/oxygen64-x64-runtime.md](docs/oxygen64-x64-runtime.md))
 
 ## NuGet Installation
 

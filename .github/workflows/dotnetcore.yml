@@ -62,12 +62,12 @@ jobs:
     - name: Build
       run: dotnet build OxygenBasic.NET.sln --configuration Release -p:Platform=x64
 
-    # Current upstream oxygen64.dll raises ACCESS_VIOLATION inside DllMain on LoadLibrary
-    # on Windows runners. Keep the x64 build green; re-enable tests when a fixed native
-    # binary is available.
-    - name: Skip native tests (oxygen64 LoadLibrary AV)
+    # oxygen64.dll is official PE32+ from OxygenBasic, but DllMain(PROCESS_ATTACH)
+    # AVs (0xC0000005) on current Windows 11 — reproduced with native MSVC LoadLibraryW
+    # as well as .NET. Re-enable tests when upstream ships a fixed binary.
+    - name: Skip native tests (oxygen64 DllMain AV)
       shell: pwsh
       run: |
-        Write-Host "x64 managed build OK."
-        Write-Host "Native tests skipped: bundled oxygen64.dll faults on LoadLibrary (0xC0000005)."
-        Write-Host "DllImport resolver is in place for oxygen64.dll when a working binary is shipped."
+        Write-Host "x64 managed build OK; oxygen.dll/oxygen64.dll both packaged."
+        Write-Host "Native tests skipped: oxygen64.dll DllMain ACCESS_VIOLATION on LoadLibrary."
+        Write-Host "See docs/oxygen64-x64-runtime.md"
