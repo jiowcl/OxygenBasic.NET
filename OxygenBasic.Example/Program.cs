@@ -46,17 +46,18 @@ namespace OxygenBasic.Example
 
                 // Oxygen requires a simple sys variable for dim ... at <address>.
                 string scriptBuffer = scriptTemplate
-                    .Replace("{{HOST_COUNTER_PTR}}", hostCounterPtr.ToInt32().ToString())
-                    .Replace("{{HOST_FIB_PTR}}", fibResultPtr.ToInt32().ToString())
-                    .Replace("{{HOST_ADD_PTR}}", addResultPtr.ToInt32().ToString());
+                    .Replace("{{HOST_COUNTER_PTR}}", FormatNativeAddress(hostCounterPtr))
+                    .Replace("{{HOST_FIB_PTR}}", FormatNativeAddress(fibResultPtr))
+                    .Replace("{{HOST_ADD_PTR}}", FormatNativeAddress(addResultPtr));
 
                 Oxygenbasic.ClearHostCallbacks();
                 Oxygenbasic.InitHost();
 
                 Console.WriteLine("OxygenBasic.NET hosted demo");
+                Console.WriteLine("Process: " + (Environment.Is64BitProcess ? "x64 (oxygen64.dll)" : "x86 (oxygen.dll)"));
                 Console.WriteLine("O2 Version: " + Oxygenbasic.Version());
                 Console.WriteLine("Include root: " + includeRoot);
-                Console.WriteLine("hostCounter @ 0x" + hostCounterPtr.ToInt32().ToString("X") + " = " + hostCounter[0]);
+                Console.WriteLine("hostCounter @ 0x" + hostCounterPtr.ToInt64().ToString("X") + " = " + hostCounter[0]);
                 Console.WriteLine();
 
                 // thinBasic-style include path callback.
@@ -111,6 +112,9 @@ namespace OxygenBasic.Example
         /// Mirrors thinBasic Oxygen <c>InclPath</c>: expand <c>%app_includepath%</c>
         /// and resolve relative include names under the host include directory.
         /// </summary>
+        /// <param name="path">The path to resolve.</param>
+        /// <param name="includeRoot">The root include directory.</param>
+        /// <returns>Returns the resolved path.</returns>
         private static string ResolveIncludePath(
             string path, 
             string includeRoot)
@@ -184,9 +188,19 @@ namespace OxygenBasic.Example
             string name, 
             IntPtr ptr)
         {
-            Console.WriteLine("[Varcall] " + name + " -> 0x" + ptr.ToInt32().ToString("X"));
+            Console.WriteLine("[Varcall] " + name + " -> 0x" + ptr.ToInt64().ToString("X"));
 
             return ptr;
+        }
+
+        /// <summary>
+        /// Format a pointer for Oxygen <c>sys</c> literals (decimal, full width).
+        /// </summary>
+        /// <param name="ptr">The pointer to format.</param>
+        /// <returns>Returns the formatted pointer.</returns>
+        private static string FormatNativeAddress(IntPtr ptr)
+        {
+            return ptr.ToInt64().ToString();
         }
 
         /// <summary>

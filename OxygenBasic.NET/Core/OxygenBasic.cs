@@ -12,40 +12,44 @@ namespace OxygenBasic.NET.Core
     public class Oxygenbasic
     {
         /// <summary>
+        /// Constructor
+        /// </summary>
+        static Oxygenbasic()
+        {
+            OxygenNative.EnsureResolver();
+        }
+
+        /// <summary>
         /// AbstNative
         /// </summary>
         /// <param name="s"></param>
         /// <returns>Returns IntPtr.</returns>
         [DllImport("oxygen.dll", EntryPoint = "o2_abst", CallingConvention = CallingConvention.StdCall)]
-        private static extern IntPtr AbstNative(
-            IntPtr s);
+        private static extern IntPtr AbstNative(IntPtr s);
 
         /// <summary>
         /// O2BasicNative
         /// </summary>
         /// <param name="s"></param>
-        /// <returns>Returns uint.</returns>
+        /// <returns>Returns IntPtr.</returns>
         [DllImport("oxygen.dll", EntryPoint = "o2_basic", CallingConvention = CallingConvention.StdCall)]
-        private static extern uint O2BasicNative(
-            IntPtr s);
+        private static extern IntPtr O2BasicNative(IntPtr s);
 
         /// <summary>
         /// ExecNative
         /// </summary>
         /// <param name="p"></param>
-        /// <returns>Returns uint.</returns>
+        /// <returns>Returns IntPtr.</returns>
         [DllImport("oxygen.dll", EntryPoint = "o2_exec", CallingConvention = CallingConvention.StdCall)]
-        private static extern uint ExecNative(
-            uint p = 0);
+        private static extern IntPtr ExecNative(IntPtr p);
 
         /// <summary>
         /// BufNative
         /// </summary>
         /// <param name="n"></param>
-        /// <returns>Returns uint.</returns>
+        /// <returns>Returns IntPtr.</returns>
         [DllImport("oxygen.dll", EntryPoint = "o2_buf", CallingConvention = CallingConvention.StdCall)]
-        private static extern uint BufNative(
-            int n);
+        private static extern IntPtr BufNative(int n);
 
         /// <summary>
         /// ErrnoNative
@@ -71,18 +75,17 @@ namespace OxygenBasic.NET.Core
         /// <summary>
         /// LibNative
         /// </summary>
-        /// <returns>Returns uint.</returns>
+        /// <returns>Returns IntPtr.</returns>
         [DllImport("oxygen.dll", EntryPoint = "o2_lib", CallingConvention = CallingConvention.StdCall)]
-        private static extern uint LibNative();
+        private static extern IntPtr LibNative();
 
         /// <summary>
         /// LinkNative
         /// </summary>
         /// <param name="s"></param>
-        /// <returns>Returns uint.</returns>
+        /// <returns>Returns IntPtr.</returns>
         [DllImport("oxygen.dll", EntryPoint = "o2_link", CallingConvention = CallingConvention.StdCall)]
-        private static extern uint LinkNative(
-            IntPtr s);
+        private static extern IntPtr LinkNative(IntPtr s);
 
         /// <summary>
         /// ModeNative
@@ -98,8 +101,7 @@ namespace OxygenBasic.NET.Core
         /// <param name="m"></param>
         /// <returns>Returns void.</returns>
         [DllImport("oxygen.dll", EntryPoint = "o2_pathcall", CallingConvention = CallingConvention.StdCall)]
-        private static extern void PathcallNative(
-            IntPtr m);
+        private static extern void PathcallNative(IntPtr m);
 
         /// <summary>
         /// PrepNative
@@ -107,8 +109,7 @@ namespace OxygenBasic.NET.Core
         /// <param name="s"></param>
         /// <returns>Returns IntPtr.</returns>
         [DllImport("oxygen.dll", EntryPoint = "o2_prep", CallingConvention = CallingConvention.StdCall)]
-        private static extern IntPtr PrepNative(
-            IntPtr s);
+        private static extern IntPtr PrepNative(IntPtr s);
 
         /// <summary>
         /// VarcallNative
@@ -116,8 +117,7 @@ namespace OxygenBasic.NET.Core
         /// <param name="m"></param>
         /// <returns>Returns void.</returns>
         [DllImport("oxygen.dll", EntryPoint = "o2_varcall", CallingConvention = CallingConvention.StdCall)]
-        private static extern void VarcallNative(
-            IntPtr m);
+        private static extern void VarcallNative(IntPtr m);
 
         /// <summary>
         /// VersionNative
@@ -132,8 +132,12 @@ namespace OxygenBasic.NET.Core
         /// <param name="s"></param>
         /// <returns>Returns IntPtr.</returns>
         [DllImport("oxygen.dll", EntryPoint = "o2_view", CallingConvention = CallingConvention.StdCall)]
-        private static extern IntPtr ViewNative(
-            IntPtr s);
+        private static extern IntPtr ViewNative(IntPtr s);
+
+        /// <summary>
+        /// Native Oxygen DLL file name for the current process (<c>oxygen.dll</c> or <c>oxygen64.dll</c>).
+        /// </summary>
+        public static string NativeLibraryFileName => OxygenNative.NativeLibraryFileName;
 
         /// <summary>
         /// Initialize the Oxygen host for .NET use (bstring UTF-8 mode).
@@ -150,8 +154,7 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="value">The string to return.</param>
         /// <returns>UTF-8 BSTR pointer.</returns>
-        public static IntPtr AllocReturnString(
-            string value)
+        public static IntPtr AllocReturnString(string value)
         {
             return AnsiBStrMarshal.Alloc(value);
         }
@@ -169,8 +172,7 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="s"></param>
         /// <returns>Returns string.</returns>
-        public static string Abst(
-            string s)
+        public static string Abst(string s)
         {
             IntPtr p = AnsiBStrMarshal.Alloc(s);
 
@@ -188,9 +190,8 @@ namespace OxygenBasic.NET.Core
         /// O2Basic
         /// </summary>
         /// <param name="s"></param>
-        /// <returns>Returns uint.</returns>
-        public static uint O2Basic(
-            string s)
+        /// <returns>Pointer to compiled code, or <see cref="IntPtr.Zero"/> on failure.</returns>
+        public static IntPtr O2Basic(string s)
         {
             IntPtr p = AnsiBStrMarshal.Alloc(s);
 
@@ -207,30 +208,38 @@ namespace OxygenBasic.NET.Core
         /// <summary>
         /// Exec
         /// </summary>
-        /// <returns>Returns uint.</returns>
-        public static uint Exec()
+        /// <returns>Execution result pointer.</returns>
+        public static IntPtr Exec()
         {
-            return ExecNative(0);
+            return ExecNative(IntPtr.Zero);
         }
 
         /// <summary>
         /// Exec
         /// </summary>
-        /// <param name="p"></param>
-        /// <returns>Returns uint.</returns>
-        public static uint Exec(
-            uint p)
+        /// <param name="p">Optional code pointer (use <see cref="IntPtr.Zero"/> for default).</param>
+        /// <returns>Execution result pointer.</returns>
+        public static IntPtr Exec(IntPtr p)
         {
             return ExecNative(p);
+        }
+
+        /// <summary>
+        /// Exec (x86-compatible address).
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns>Execution result pointer.</returns>
+        public static IntPtr Exec(uint p)
+        {
+            return ExecNative(new IntPtr(unchecked((int)p)));
         }
 
         /// <summary>
         /// Buf
         /// </summary>
         /// <param name="n"></param>
-        /// <returns>Returns uint.</returns>
-        public static uint Buf(
-            int n)
+        /// <returns>Buffer pointer.</returns>
+        public static IntPtr Buf(int n)
         {
             return BufNative(n);
         }
@@ -265,8 +274,8 @@ namespace OxygenBasic.NET.Core
         /// <summary>
         /// Lib
         /// </summary>
-        /// <returns>Returns uint.</returns>
-        public static uint Lib()
+        /// <returns>Oxygen library module handle.</returns>
+        public static IntPtr Lib()
         {
             return LibNative();
         }
@@ -275,9 +284,8 @@ namespace OxygenBasic.NET.Core
         /// Link
         /// </summary>
         /// <param name="s"></param>
-        /// <returns>Returns uint.</returns>
-        public static uint Link(
-            string s)
+        /// <returns>Pointer to linked code.</returns>
+        public static IntPtr Link(string s)
         {
             IntPtr p = AnsiBStrMarshal.Alloc(s);
 
@@ -295,9 +303,8 @@ namespace OxygenBasic.NET.Core
         /// Eval (alias of <see cref="Link"/>; matches thinBasic <c>O2_Eval</c>).
         /// </summary>
         /// <param name="s"></param>
-        /// <returns>Returns uint.</returns>
-        public static uint Eval(
-            string s)
+        /// <returns>Pointer to linked code.</returns>
+        public static IntPtr Eval(string s)
         {
             return Link(s);
         }
@@ -307,8 +314,7 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="m"></param>
         /// <returns>Returns void.</returns>
-        public static void Mode(
-            int m)
+        public static void Mode(int m)
         {
             ModeNative(m);
         }
@@ -318,8 +324,7 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="m"></param>
         /// <returns>Returns void.</returns>
-        public static void Mode(
-            Enums.Mode m)
+        public static void Mode(Enums.Mode m)
         {
             ModeNative((int)m);
         }
@@ -329,8 +334,17 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="m">Native function pointer.</param>
         /// <returns>Returns void.</returns>
-        public static void Pathcall(
-            uint m)
+        public static void Pathcall(IntPtr m)
+        {
+            PathcallNative(m);
+        }
+
+        /// <summary>
+        /// Pathcall (x86-compatible address).
+        /// </summary>
+        /// <param name="m">Native function pointer.</param>
+        /// <returns>Returns void.</returns>
+        public static void Pathcall(uint m)
         {
             PathcallNative(new IntPtr(unchecked((int)m)));
         }
@@ -340,8 +354,7 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="callback">Native path callback.</param>
         /// <returns>Returns void.</returns>
-        public static void Pathcall(
-            OxygenPathCallback callback)
+        public static void Pathcall(OxygenPathCallback callback)
         {
             IntPtr ptr = HostCallbackTable.Add(callback);
             PathcallNative(ptr);
@@ -352,8 +365,7 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="resolver">Managed path resolver.</param>
         /// <returns>Returns void.</returns>
-        public static void Pathcall(
-            OxygenPathResolver resolver)
+        public static void Pathcall(OxygenPathResolver resolver)
         {
             if (resolver == null)
             {
@@ -363,7 +375,6 @@ namespace OxygenBasic.NET.Core
             OxygenPathCallback callback = pathPtr =>
             {
                 string path = Marshal.PtrToStringUTF8(pathPtr) ?? string.Empty;
-
                 return AllocReturnString(resolver(path));
             };
 
@@ -375,8 +386,7 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="s"></param>
         /// <returns>Returns string.</returns>
-        public static string Prep(
-            string s)
+        public static string Prep(string s)
         {
             IntPtr p = AnsiBStrMarshal.Alloc(s);
 
@@ -395,8 +405,17 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="m">Native function pointer.</param>
         /// <returns>Returns void.</returns>
-        public static void Varcall(
-            uint m)
+        public static void Varcall(IntPtr m)
+        {
+            VarcallNative(m);
+        }
+
+        /// <summary>
+        /// Varcall (x86-compatible address).
+        /// </summary>
+        /// <param name="m">Native function pointer.</param>
+        /// <returns>Returns void.</returns>
+        public static void Varcall(uint m)
         {
             VarcallNative(new IntPtr(unchecked((int)m)));
         }
@@ -406,8 +425,7 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="callback">Native variable callback.</param>
         /// <returns>Returns void.</returns>
-        public static void Varcall(
-            OxygenVarCallback callback)
+        public static void Varcall(OxygenVarCallback callback)
         {
             IntPtr ptr = HostCallbackTable.Add(callback);
             VarcallNative(ptr);
@@ -418,8 +436,7 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="resolver">Managed variable resolver.</param>
         /// <returns>Returns void.</returns>
-        public static void Varcall(
-            OxygenVarResolver resolver)
+        public static void Varcall(OxygenVarResolver resolver)
         {
             if (resolver == null)
             {
@@ -449,8 +466,7 @@ namespace OxygenBasic.NET.Core
         /// </summary>
         /// <param name="s"></param>
         /// <returns>Returns string.</returns>
-        public static string View(
-            string s)
+        public static string View(string s)
         {
             IntPtr p = AnsiBStrMarshal.Alloc(s);
 

@@ -2,6 +2,7 @@
 // Copyright (c) 2019-2026 Jiowcl. All rights reserved.
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.IO;
 using System.Text;
 
@@ -26,9 +27,9 @@ namespace OxygenBasic.NET.Core.Tests
         [TestMethod]
         public void LibTest()
         {
-            uint result = Oxygenbasic.Lib();
+            IntPtr result = Oxygenbasic.Lib();
 
-            Assert.IsTrue(result > 0);
+            Assert.AreNotEqual(IntPtr.Zero, result);
         }
 
         [TestMethod]
@@ -45,9 +46,9 @@ namespace OxygenBasic.NET.Core.Tests
         [TestMethod]
         public void O2BasicTest()
         {
-            uint result = Oxygenbasic.O2Basic("int a = 1234");
+            IntPtr result = Oxygenbasic.O2Basic("int a = 1234");
 
-            Assert.IsTrue(result > 0);
+            Assert.AreNotEqual(IntPtr.Zero, result);
             Assert.AreEqual(0, Oxygenbasic.Errno());
         }
 
@@ -61,9 +62,9 @@ namespace OxygenBasic.NET.Core.Tests
             Oxygenbasic.O2Basic(scriptBuffer);
             Oxygenbasic.Mode(Enums.Mode.Asciiz);
 
-            uint result = Oxygenbasic.Exec();
+            IntPtr result = Oxygenbasic.Exec();
 
-            Assert.IsTrue(result > 0);
+            Assert.AreNotEqual(IntPtr.Zero, result);
             Assert.AreEqual(0, Oxygenbasic.Errno());
         }
 
@@ -76,9 +77,9 @@ namespace OxygenBasic.NET.Core.Tests
             Oxygenbasic.O2Basic(scriptBuffer);
             Oxygenbasic.Mode(Enums.Mode.Asciiz);
 
-            uint result = Oxygenbasic.Buf(0);
+            IntPtr result = Oxygenbasic.Buf(0);
 
-            Assert.IsTrue(result > 0);
+            Assert.AreNotEqual(IntPtr.Zero, result);
         }
 
         [TestMethod]
@@ -129,17 +130,17 @@ namespace OxygenBasic.NET.Core.Tests
         [TestMethod]
         public void LinkTest()
         {
-            uint result = Oxygenbasic.Link("int a = 1234");
+            IntPtr result = Oxygenbasic.Link("int a = 1234");
 
-            Assert.IsTrue(result > 0);
+            Assert.AreNotEqual(IntPtr.Zero, result);
         }
 
         [TestMethod]
         public void EvalTest()
         {
-            uint result = Oxygenbasic.Eval("int a = 1234");
+            IntPtr result = Oxygenbasic.Eval("int a = 1234");
 
-            Assert.IsTrue(result > 0);
+            Assert.AreNotEqual(IntPtr.Zero, result);
         }
 
         [TestMethod]
@@ -177,7 +178,7 @@ namespace OxygenBasic.NET.Core.Tests
             Oxygenbasic.ClearHostCallbacks();
             Oxygenbasic.InitHost();
 
-            OxygenVarResolver resolver = name => System.IntPtr.Zero;
+            OxygenVarResolver resolver = name => IntPtr.Zero;
             Oxygenbasic.Varcall(resolver);
 
             Oxygenbasic.ClearHostCallbacks();

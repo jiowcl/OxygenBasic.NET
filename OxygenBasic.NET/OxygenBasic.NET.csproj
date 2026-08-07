@@ -8,28 +8,27 @@
     <Company>Inwazy Technology</Company>
     <Authors>Jiowcl</Authors>
     <PackageProjectUrl>https://github.com/jiowcl/OxygenBasic.NET</PackageProjectUrl>
-    <PackageReleaseNotes>1.0.7 - Manual AnsiBStr marshalling; host InitHost/Pathcall/Varcall; net8/9/10</PackageReleaseNotes>
+    <PackageReleaseNotes>1.0.8 - x86/x64 native load (oxygen.dll / oxygen64.dll); Windows CI</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <Version>1.0.7</Version>
+    <Version>1.0.8</Version>
     <RepositoryUrl>https://github.com/jiowcl/OxygenBasic.NET</RepositoryUrl>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <PlatformTarget>x86</PlatformTarget>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+  <PropertyGroup Condition="'$(Platform)' == 'x86'">
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition="'$(Platform)' == 'x64'">
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition="'$(Platform)' == 'AnyCPU' or '$(Platform)' == ''">
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>
@@ -47,6 +46,10 @@
     <ContentWithTargetPath Include="oxygen.dll" Pack="true">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <TargetPath>oxygen.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="oxygen64.dll" Pack="true">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>oxygen64.dll</TargetPath>
     </ContentWithTargetPath>
   </ItemGroup>
 

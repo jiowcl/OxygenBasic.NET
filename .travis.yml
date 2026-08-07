@@ -1,3 +1,5 @@
+# Native oxygen.dll / oxygen64.dll require Windows.
+# CI is hosted on GitHub Actions (windows-latest, x86 + x64). See .github/workflows/dotnetcore.yml
 language: csharp
 dist: jammy
 mono: none
@@ -5,11 +7,6 @@ mono: none
 dotnet:
   - 10.0
 
-before_script:
-  - sudo apt-get update
-  - sudo apt-get install -y libssl-dev
-
 script:
-  - cd "./OxygenBasic.NET"
-  - dotnet build --configuration Release
-  - dotnet test --configuration Release --no-build
+  - echo "Travis CI is Linux-only; OxygenBasic.NET native tests run on GitHub Actions (Windows x86/x64)."
+  - exit 0
