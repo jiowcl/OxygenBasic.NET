@@ -14,9 +14,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    # x64 SDK drives `dotnet build` / `dotnet test`.
-    # x86 runtime provides hostfxr for the 32-bit testhost (PlatformTarget=x86);
-    # without it, testhost loads Program Files\dotnet\hostfxr.dll → 0x800700C1.
     - name: Setup .NET x64 SDK
       uses: actions/setup-dotnet@v4
       with:
@@ -26,14 +23,19 @@ jobs:
           10.0.x
         architecture: x64
 
-    - name: Setup .NET x86 runtime host
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: |
-          8.0.x
-          9.0.x
-          10.0.x
-        architecture: x86
+    # setup-dotnet architecture:x86 does not always lay down every Microsoft.NETCore.App
+    # x86 runtime (net9 was missing → testhost.x86.exe failed). Install runtimes explicitly.
+    - name: Install .NET x86 runtimes (8 / 9 / 10)
+      shell: pwsh
+      run: |
+        $installDir = Join-Path ${env:ProgramFiles(x86)} "dotnet"
+        Invoke-WebRequest -Uri "https://dot.net/v1/dotnet-install.ps1" -OutFile ".\dotnet-install.ps1"
+        foreach ($channel in @("8.0", "9.0", "10.0")) {
+          Write-Host "Installing Microsoft.NETCore.App $channel (x86) -> $installDir"
+          .\dotnet-install.ps1 -Channel $channel -Runtime dotnet -Architecture x86 -InstallDir $installDir
+        }
+        Write-Host "Installed x86 frameworks:"
+        Get-ChildItem (Join-Path $installDir "shared\Microsoft.NETCore.App") | ForEach-Object { $_.Name }
 
     - name: Build
       run: dotnet build OxygenBasic.NET.sln --configuration Release -p:Platform=x86
@@ -42,17 +44,20 @@ jobs:
       shell: pwsh
       run: |
         $dotnetRootX86 = Join-Path ${env:ProgramFiles(x86)} "dotnet"
-        if (-not (Test-Path (Join-Path $dotnetRootX86 "dotnet.exe"))) {
-          throw "x86 dotnet not found at $dotnetRootX86"
-        }
-        # 64-bit SDK CLI launches 32-bit testhost; point it at x86 hostfxr.
         [Environment]::SetEnvironmentVariable("DOTNET_ROOT(x86)", $dotnetRootX86)
         Write-Host "DOTNET_ROOT(x86)=$([Environment]::GetEnvironmentVariable('DOTNET_ROOT(x86)'))"
-        dotnet test OxygenBasic.NETTests/OxygenBasic.NETTests.csproj `
-          --configuration Release `
-          -p:Platform=x86 `
-          --no-build `
-          --verbosity normal
+        $frameworks = @("net8.0-windows", "net9.0-windows", "net10.0-windows")
+        foreach ($tfm in $frameworks) {
+          Write-Host "::group::dotnet test $tfm"
+          dotnet test OxygenBasic.NETTests/OxygenBasic.NETTests.csproj `
+            --configuration Release `
+            -p:Platform=x86 `
+            --framework $tfm `
+            --no-build `
+            --verbosity normal
+          if ($LASTEXITCODE -ne 0) { throw "Tests failed for $tfm" }
+          Write-Host "::endgroup::"
+        }
 
     - name: Run hosted example (net10)
       shell: pwsh
