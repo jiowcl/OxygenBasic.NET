@@ -3,6 +3,8 @@
 .Net Wrapper for OxygenBasic Programming Language.
 
 ![GitHub](https://img.shields.io/github/license/jiowcl/OxygenBasic.NET)
+![.NET](https://img.shields.io/badge/.NET-512BD4?style=flat-square&logo=dotnet&logoColor=white)
+![OxygenBasic](https://img.shields.io/badge/Language-OxygenBasic-00A896?style=flat-square)
 ![Nuget](https://img.shields.io/nuget/v/OxygenBasic.NET)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/06f3d62e7abb41c290f9feeb44bd4827)](https://www.codacy.com/gh/jiowcl/OxygenBasic.NET/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jiowcl/OxygenBasic.NET&amp;utm_campaign=Badge_Grade)
 
