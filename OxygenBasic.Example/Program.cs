@@ -14,9 +14,6 @@ namespace OxygenBasic.Example
     /// </summary>
     public class Program
     {
-        // The marker for the app include path.
-        private const string AppIncludeMarker = "%app_includepath%";
-
         /// <summary>
         /// Main
         /// </summary>
@@ -50,9 +47,6 @@ namespace OxygenBasic.Example
                     .Replace("{{HOST_FIB_PTR}}", FormatNativeAddress(fibResultPtr))
                     .Replace("{{HOST_ADD_PTR}}", FormatNativeAddress(addResultPtr));
 
-                Oxygenbasic.ClearHostCallbacks();
-                Oxygenbasic.InitHost();
-
                 Console.WriteLine("OxygenBasic.NET hosted demo");
                 Console.WriteLine("Process: " + (Environment.Is64BitProcess ? "x64 (oxygen64.dll)" : "x86 (oxygen.dll)"));
                 Console.WriteLine("O2 Version: " + Oxygenbasic.Version());
@@ -60,33 +54,32 @@ namespace OxygenBasic.Example
                 Console.WriteLine("hostCounter @ 0x" + hostCounterPtr.ToInt64().ToString("X") + " = " + hostCounter[0]);
                 Console.WriteLine();
 
-                // thinBasic-style include path callback.
-                Oxygenbasic.Pathcall(path => ResolveIncludePath(path, includeRoot));
-
-                // thinBasic-style variable pointer callback (available if Oxygen asks by name).
-                Oxygenbasic.Varcall(name => ResolveHostVariable(name, hostCounterHandle, fibResultHandle, addResultHandle));
-
-                Oxygenbasic.O2Basic(scriptBuffer);
-
-                if (Oxygenbasic.Errno() != 0)
+                Oxygenbasic.Run(scriptBuffer, new OxygenHostOptions
                 {
-                    Console.WriteLine("Compile error: " + Oxygenbasic.Error());
-                    return;
-                }
-
-                Oxygenbasic.Exec();
-
-                if (Oxygenbasic.Errno() != 0)
-                {
-                    Console.WriteLine("Runtime error: " + Oxygenbasic.Error());
-                    return;
-                }
+                    IncludeRoot = includeRoot,
+                    PathResolver = path =>
+                    {
+                        string resolved = OxygenHostPaths.Resolve(path, includeRoot);
+                        Console.WriteLine("[Pathcall] " + path + " -> " + resolved);
+                        return resolved;
+                    },
+                    VarResolver = name => ResolveHostVariable(
+                        name,
+                        hostCounterHandle,
+                        fibResultHandle,
+                        addResultHandle)
+                });
 
                 Console.WriteLine();
                 Console.WriteLine("Results written by Oxygen into .NET memory:");
                 Console.WriteLine("  Fibonacci(10) = " + fibResult[0]);
                 Console.WriteLine("  Add(40, 2)    = " + addResult[0]);
                 Console.WriteLine("  hostCounter   = " + hostCounter[0] + " (was 100)");
+            }
+            catch (OxygenException ex)
+            {
+                Console.WriteLine(ex.Message);
+                return;
             }
             finally
             {
@@ -98,6 +91,7 @@ namespace OxygenBasic.Example
 
             Console.WriteLine();
             Console.WriteLine("Press Enter to exit...");
+
             try
             {
                 Console.ReadLine();
@@ -106,42 +100,6 @@ namespace OxygenBasic.Example
             {
                 // Input redirected (CI / piped run).
             }
-        }
-
-        /// <summary>
-        /// Mirrors thinBasic Oxygen <c>InclPath</c>: expand <c>%app_includepath%</c>
-        /// and resolve relative include names under the host include directory.
-        /// </summary>
-        /// <param name="path">The path to resolve.</param>
-        /// <param name="includeRoot">The root include directory.</param>
-        /// <returns>Returns the resolved path.</returns>
-        private static string ResolveIncludePath(
-            string path, 
-            string includeRoot)
-        {
-            string request = path ?? string.Empty;
-
-            if (request.StartsWith(AppIncludeMarker, StringComparison.OrdinalIgnoreCase))
-            {
-                string rest = request.Substring(AppIncludeMarker.Length).TrimStart('\\', '/');
-                string resolved = string.IsNullOrEmpty(rest)
-                    ? includeRoot
-                    : Path.GetFullPath(Path.Combine(includeRoot, rest));
-
-                Console.WriteLine("[Pathcall] " + request + " -> " + resolved);
-                return resolved;
-            }
-
-            if (!Path.IsPathRooted(request))
-            {
-                string resolved = Path.GetFullPath(Path.Combine(includeRoot, request));
-                Console.WriteLine("[Pathcall] " + request + " -> " + resolved);
-                return resolved;
-            }
-
-            Console.WriteLine("[Pathcall] " + request);
-
-            return request;
         }
 
         /// <summary>

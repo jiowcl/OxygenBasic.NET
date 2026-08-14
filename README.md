@@ -39,20 +39,16 @@ Building requires [Visual Studio 2026 Community](https://visualstudio.microsoft.
 Hosted script with include-path callback and shared .NET memory (see `OxygenBasic.Example`):
 
 ```csharp
-Oxygenbasic.InitHost();
-Oxygenbasic.Pathcall(path => /* resolve %app_includepath% to Sample\inc */);
-Oxygenbasic.Varcall(name => /* optional host variable lookup */);
-
-// Script uses: includepath "%app_includepath%" / include "math_helpers.inc"
-// and dim as int hostCounter at <pinned .NET address>
-Oxygenbasic.O2Basic(script);
-if (Oxygenbasic.Errno() == 0)
+OxygenRunResult result = Oxygenbasic.Run(script, new OxygenHostOptions
 {
-    Oxygenbasic.Exec();
-}
+    IncludeRoot = @"Sample\inc",
+    VarResolver = name => /* optional host variable lookup */
+});
 ```
 
-Files: `Sample\hosted_demo.txt`, `Sample\inc\math_helpers.inc`.  
+`Run` performs `InitHost` → Pathcall (`%app_includepath%`) → `O2Basic` → `Exec`, and throws `OxygenException` on compile/runtime errors (`ThrowOnError = false` to inspect `OxygenRunResult` instead).
+
+See `OxygenBasic.Example` for include-path + shared .NET memory (`Sample\hosted_demo.txt`, `Sample\inc\math_helpers.inc`).  
 A simpler Fibonacci-only script remains at `Sample\test_fib.txt`.
 
 ## License

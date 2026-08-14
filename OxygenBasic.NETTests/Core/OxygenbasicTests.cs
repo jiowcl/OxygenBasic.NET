@@ -185,6 +185,52 @@ namespace OxygenBasic.NET.Core.Tests
             Assert.IsNotNull(resolver);
         }
 
+        [TestMethod]
+        public void RunTest()
+        {
+            string scriptPath = @"Sample\test.txt";
+            string scriptBuffer = File.ReadAllText(scriptPath, Encoding.UTF8);
+
+            OxygenRunResult result = Oxygenbasic.Run(scriptBuffer);
+
+            Assert.IsTrue(result.Success);
+            Assert.AreEqual(0, result.Errno);
+            Assert.AreEqual(OxygenRunStage.None, result.FailedStage);
+            Assert.AreNotEqual(IntPtr.Zero, result.Code);
+        }
+
+        [TestMethod]
+        public void RunFileTest()
+        {
+            OxygenRunResult result = Oxygenbasic.RunFile(@"Sample\test.txt");
+
+            Assert.IsTrue(result.Success);
+            Assert.AreEqual(0, result.Errno);
+        }
+
+        [TestMethod]
+        public void RunCompileErrorTest()
+        {
+            OxygenException ex = Assert.ThrowsExactly<OxygenException>(
+                () => Oxygenbasic.Run("this is not valid oxygen source !!!"));
+
+            Assert.AreEqual(OxygenRunStage.Compile, ex.Stage);
+            Assert.AreNotEqual(0, ex.Errno);
+        }
+
+        [TestMethod]
+        public void RunCompileErrorNoThrowTest()
+        {
+            OxygenRunResult result = Oxygenbasic.Run(
+                "this is not valid oxygen source !!!",
+                new OxygenHostOptions { ThrowOnError = false });
+
+            Assert.IsFalse(result.Success);
+            Assert.AreEqual(OxygenRunStage.Compile, result.FailedStage);
+            Assert.AreNotEqual(0, result.Errno);
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result.Error));
+        }
+
         /// <summary>
         /// Must run after compile/exec tests: <c>o2_abst</c> leaves oxygen.dll in abstract mode.
         /// </summary>

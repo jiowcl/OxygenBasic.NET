@@ -2,6 +2,7 @@
 // Copyright (c) 2019-2026 Jiowcl. All rights reserved.
 
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace OxygenBasic.NET.Core
@@ -478,6 +479,157 @@ namespace OxygenBasic.NET.Core
             {
                 AnsiBStrMarshal.Free(p);
             }
+        }
+
+        /// <summary>
+        /// Compile and execute Oxygen source (InitHost, optional Pathcall/Varcall, O2Basic, Exec).
+        /// Throws <see cref="OxygenException"/> on failure.
+        /// </summary>
+        /// <param name="source">Oxygen source text.</param>
+        /// <returns>Run result.</returns>
+        public static OxygenRunResult Run(string source)
+        {
+            return Run(source, null);
+        }
+
+        /// <summary>
+        /// Compile and execute Oxygen source from a file.
+        /// Throws <see cref="OxygenException"/> on failure unless
+        /// <see cref="OxygenHostOptions.ThrowOnError"/> is false.
+        /// </summary>
+        /// <param name="path">Script file path.</param>
+        /// <param name="options">Host options, or null for defaults.</param>
+        /// <returns>Run result.</returns>
+        public static OxygenRunResult RunFile(
+            string path,
+            OxygenHostOptions options = null)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentException("Script path is required.", nameof(path));
+            }
+
+            string source = File.ReadAllText(path);
+            OxygenHostOptions host = options ?? new OxygenHostOptions();
+
+            if (string.IsNullOrEmpty(host.IncludeRoot))
+            {
+                string scriptDir = Path.GetDirectoryName(Path.GetFullPath(path));
+
+                if (!string.IsNullOrEmpty(scriptDir))
+                {
+                    host.IncludeRoot = scriptDir;
+                }
+            }
+
+            return Run(source, host);
+        }
+
+        /// <summary>
+        /// Compile and execute Oxygen source (InitHost, optional Pathcall/Varcall, O2Basic, Exec).
+        /// </summary>
+        /// <param name="source">Oxygen source text.</param>
+        /// <param name="options">Host options, or null for defaults.</param>
+        /// <returns>Run result.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="source"/> is null.</exception>
+        /// <exception cref="OxygenException">Thrown on compile/execute failure when throwing is enabled.</exception>
+        public static OxygenRunResult Run(
+            string source,
+            OxygenHostOptions options)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            OxygenHostOptions host = options ?? new OxygenHostOptions();
+
+            if (host.ClearHostCallbacks)
+            {
+                ClearHostCallbacks();
+            }
+
+            if (host.InitHost)
+            {
+                InitHost();
+            }
+
+            OxygenPathResolver pathResolver = host.PathResolver;
+
+            if (pathResolver == null && !string.IsNullOrEmpty(host.IncludeRoot))
+            {
+                string includeRoot = host.IncludeRoot;
+                string marker = host.AppIncludeMarker;
+                pathResolver = path => OxygenHostPaths.Resolve(path, includeRoot, marker);
+            }
+
+            if (pathResolver != null)
+            {
+                Pathcall(pathResolver);
+            }
+
+            if (host.VarResolver != null)
+            {
+                Varcall(host.VarResolver);
+            }
+
+            IntPtr code = O2Basic(source);
+            int errno = Errno();
+
+            if (errno != 0)
+            {
+                return Fail(host, OxygenRunStage.Compile, errno, code, IntPtr.Zero);
+            }
+
+            IntPtr execResult = Exec();
+            errno = Errno();
+
+            if (errno != 0)
+            {
+                return Fail(host, OxygenRunStage.Execute, errno, code, execResult);
+            }
+
+            return new OxygenRunResult(
+                true,
+                OxygenRunStage.None,
+                0,
+                string.Empty,
+                code,
+                execResult);
+        }
+
+        /// <summary>
+        /// Fail
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="stage"></param>
+        /// <param name="errno"></param>
+        /// <param name="code"></param>
+        /// <param name="execResult"></param>
+        /// <returns>Returns OxygenRunResult.</returns>
+        private static OxygenRunResult Fail(
+            OxygenHostOptions host,
+            OxygenRunStage stage,
+            int errno,
+            IntPtr code,
+            IntPtr execResult)
+        {
+            string error = Error() ?? string.Empty;
+            
+            OxygenRunResult result = new OxygenRunResult(
+                false,
+                stage,
+                errno,
+                error,
+                code,
+                execResult);
+
+            if (host.ThrowOnError)
+            {
+                throw new OxygenException(stage, errno, error);
+            }
+
+            return result;
         }
     }
 }

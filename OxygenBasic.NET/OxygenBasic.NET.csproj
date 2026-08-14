@@ -8,7 +8,7 @@
     <Company>Inwazy Technology</Company>
     <Authors>Jiowcl</Authors>
     <PackageProjectUrl>https://github.com/jiowcl/OxygenBasic.NET</PackageProjectUrl>
-    <PackageReleaseNotes>1.0.8 - x86/x64 native load (oxygen.dll / oxygen64.dll); Windows CI</PackageReleaseNotes>
+    <PackageReleaseNotes>1.0.8 - Hosted Run/RunFile API; x86/x64 native load; Windows CI</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageTags>oxygenbasic;o2h;oxygen;scripting;compiler;pinvoke;windows;x86</PackageTags>
     <Version>1.0.8</Version>
