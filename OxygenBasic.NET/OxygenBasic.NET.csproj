@@ -8,7 +8,7 @@
     <Company>Inwazy Technology</Company>
     <Authors>Jiowcl</Authors>
     <PackageProjectUrl>https://github.com/jiowcl/OxygenBasic.NET</PackageProjectUrl>
-    <PackageReleaseNotes>1.0.8 - Hosted Run/RunFile API; x86/x64 native load; Windows CI</PackageReleaseNotes>
+    <PackageReleaseNotes>1.0.8 BREAKING: O2Basic/Exec/Buf/Lib/Link/Eval now return IntPtr (was uint). Prefer x86; x64 throws PlatformNotSupportedException. Added Run/RunFile hosted API.</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageTags>oxygenbasic;o2h;oxygen;scripting;compiler;pinvoke;windows;x86</PackageTags>
     <Version>1.0.8</Version>
@@ -38,7 +38,7 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-    <None Include="..\README.md">
+    <None Include="..\CHANGELOG.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>

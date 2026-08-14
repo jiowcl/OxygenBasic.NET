@@ -24,6 +24,14 @@ GitHub Actions runs on `windows-latest`:
 - **x86**: build + test (net8/9/10) + hosted example  
 - **x64**: build only (native tests skipped; see [docs/oxygen64-x64-runtime.md](docs/oxygen64-x64-runtime.md))
 
+## Breaking changes (1.0.8)
+
+Upgrading from 1.0.7: `O2Basic`, `Exec`, `Buf`, `Lib`, `Link`, and `Eval` now return **`IntPtr`** instead of `uint`. Compare with `IntPtr.Zero`, not `> 0`.
+
+A 64-bit / AnyCPU process throws `PlatformNotSupportedException` instead of loading `oxygen64.dll`.
+
+Full notes and a migration snippet: [CHANGELOG.md](CHANGELOG.md).
+
 ## NuGet Installation
 
 ```powershell
