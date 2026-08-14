@@ -256,10 +256,21 @@ namespace OxygenBasic.NET.Core.Tests
         [TestMethod]
         public void ZzzAbstTest()
         {
+            Assert.IsFalse(Oxygenbasic.IsAbstractMode);
+
             string result = Oxygenbasic.Abst("int a = 1234");
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Length > 0);
+            Assert.IsTrue(Oxygenbasic.IsAbstractMode);
+
+            InvalidOperationException ex = Assert.ThrowsExactly<InvalidOperationException>(
+                () => Oxygenbasic.O2Basic("int a = 1234"));
+
+            Assert.IsTrue(ex.Message.Contains("abstract", StringComparison.OrdinalIgnoreCase));
+
+            Assert.ThrowsExactly<InvalidOperationException>(
+                () => Oxygenbasic.Run("int a = 1234"));
         }
     }
 }

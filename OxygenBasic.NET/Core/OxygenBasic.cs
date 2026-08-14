@@ -8,10 +8,19 @@ using System.Runtime.InteropServices;
 namespace OxygenBasic.NET.Core
 {
     /// <summary>
-    /// Oxygenbasic
+    /// Oxygen host wrapper. Native state in <c>oxygen.dll</c> is process-wide:
+    /// do not call from multiple threads concurrently, and do not call
+    /// <see cref="Abst"/> if you still need to <see cref="Run"/> or <see cref="O2Basic"/>
+    /// in the same process. See <c>docs/oxygen-process-state.md</c>.
     /// </summary>
     public class Oxygenbasic
     {
+        // Engine lock for process-wide state.
+        private static readonly object EngineLock = new object();
+
+        // Abstract mode flag.
+        private static bool _abstractMode;
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -160,6 +169,31 @@ namespace OxygenBasic.NET.Core
         }
 
         /// <summary>
+        /// True after <see cref="Abst"/> has switched oxygen.dll into abstract/assembler view.
+        /// There is no native reset; compile/Run in this process will throw.
+        /// </summary>
+        public static bool IsAbstractMode
+        {
+            get
+            {
+                lock (EngineLock)
+                {
+                    return _abstractMode;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Message used when compile APIs are called after <see cref="Abst"/>.
+        /// </summary>
+        public static string AbstractModeMessage =>
+            "oxygen.dll keeps process-wide compiler state. Abst() switched the engine " +
+            "into abstract/assembler view and that cannot be undone in this process " +
+            "(there is no native reset). Start a new process to compile or Run again. " +
+            "Oxygen APIs are serialized on one lock but state is still global — " +
+            "do not use parallel threads. See docs/oxygen-process-state.md.";
+
+        /// <summary>
         /// Initialize the Oxygen host for .NET use (bstring UTF-8 mode).
         /// Matches thinBasic Oxygen module default <c>o2_mode(9)</c>.
         /// </summary>
@@ -188,22 +222,29 @@ namespace OxygenBasic.NET.Core
         }
 
         /// <summary>
-        /// Abst
+        /// Abst (abstract/assembler listing). Leaves the process-wide engine in abstract mode;
+        /// later <see cref="O2Basic"/> / <see cref="Run(string)"/> throw
+        /// <see cref="InvalidOperationException"/>. See <c>docs/oxygen-process-state.md</c>.
         /// </summary>
         /// <param name="s"></param>
         /// <returns>Returns string.</returns>
         public static string Abst(string s)
         {
-            IntPtr p = AnsiBStrMarshal.Alloc(s);
+            return WithEngine(() =>
+            {
+                IntPtr p = AnsiBStrMarshal.Alloc(s);
 
-            try
-            {
-                return AnsiBStrMarshal.PtrToString(AbstNative(p));
-            }
-            finally
-            {
-                AnsiBStrMarshal.Free(p);
-            }
+                try
+                {
+                    string result = AnsiBStrMarshal.PtrToString(AbstNative(p));
+                    _abstractMode = true;
+                    return result;
+                }
+                finally
+                {
+                    AnsiBStrMarshal.Free(p);
+                }
+            });
         }
 
         /// <summary>
@@ -213,16 +254,19 @@ namespace OxygenBasic.NET.Core
         /// <returns>Pointer to compiled code, or <see cref="IntPtr.Zero"/> on failure.</returns>
         public static IntPtr O2Basic(string s)
         {
-            IntPtr p = AnsiBStrMarshal.Alloc(s);
+            return WithEngine(() =>
+            {
+                IntPtr p = AnsiBStrMarshal.Alloc(s);
 
-            try
-            {
-                return O2BasicNative(p);
-            }
-            finally
-            {
-                AnsiBStrMarshal.Free(p);
-            }
+                try
+                {
+                    return O2BasicNative(p);
+                }
+                finally
+                {
+                    AnsiBStrMarshal.Free(p);
+                }
+            }, requireCompileReady: true);
         }
 
         /// <summary>
@@ -231,7 +275,7 @@ namespace OxygenBasic.NET.Core
         /// <returns>Execution result pointer.</returns>
         public static IntPtr Exec()
         {
-            return ExecNative(IntPtr.Zero);
+            return WithEngine(() => ExecNative(IntPtr.Zero), requireCompileReady: true);
         }
 
         /// <summary>
@@ -241,7 +285,7 @@ namespace OxygenBasic.NET.Core
         /// <returns>Execution result pointer.</returns>
         public static IntPtr Exec(IntPtr p)
         {
-            return ExecNative(p);
+            return WithEngine(() => ExecNative(p), requireCompileReady: true);
         }
 
         /// <summary>
@@ -251,7 +295,7 @@ namespace OxygenBasic.NET.Core
         /// <returns>Execution result pointer.</returns>
         public static IntPtr Exec(uint p)
         {
-            return ExecNative(new IntPtr(unchecked((int)p)));
+            return Exec(new IntPtr(unchecked((int)p)));
         }
 
         /// <summary>
@@ -261,7 +305,7 @@ namespace OxygenBasic.NET.Core
         /// <returns>Buffer pointer.</returns>
         public static IntPtr Buf(int n)
         {
-            return BufNative(n);
+            return WithEngine(() => BufNative(n), requireCompileReady: true);
         }
 
         /// <summary>
@@ -270,7 +314,7 @@ namespace OxygenBasic.NET.Core
         /// <returns>Returns int.</returns>
         public static int Errno()
         {
-            return ErrnoNative();
+            return WithEngine(ErrnoNative);
         }
 
         /// <summary>
@@ -279,7 +323,7 @@ namespace OxygenBasic.NET.Core
         /// <returns>Returns string.</returns>
         public static string Error()
         {
-            return AnsiBStrMarshal.PtrToString(ErrorNative());
+            return WithEngine(() => AnsiBStrMarshal.PtrToString(ErrorNative()));
         }
 
         /// <summary>
@@ -288,7 +332,7 @@ namespace OxygenBasic.NET.Core
         /// <returns>Returns int.</returns>
         public static int Len()
         {
-            return LenNative();
+            return WithEngine(LenNative, requireCompileReady: true);
         }
 
         /// <summary>
@@ -297,7 +341,7 @@ namespace OxygenBasic.NET.Core
         /// <returns>Oxygen library module handle.</returns>
         public static IntPtr Lib()
         {
-            return LibNative();
+            return WithEngine(LibNative);
         }
 
         /// <summary>
@@ -307,16 +351,19 @@ namespace OxygenBasic.NET.Core
         /// <returns>Pointer to linked code.</returns>
         public static IntPtr Link(string s)
         {
-            IntPtr p = AnsiBStrMarshal.Alloc(s);
+            return WithEngine(() =>
+            {
+                IntPtr p = AnsiBStrMarshal.Alloc(s);
 
-            try
-            {
-                return LinkNative(p);
-            }
-            finally
-            {
-                AnsiBStrMarshal.Free(p);
-            }
+                try
+                {
+                    return LinkNative(p);
+                }
+                finally
+                {
+                    AnsiBStrMarshal.Free(p);
+                }
+            }, requireCompileReady: true);
         }
 
         /// <summary>
@@ -336,7 +383,7 @@ namespace OxygenBasic.NET.Core
         /// <returns>Returns void.</returns>
         public static void Mode(int m)
         {
-            ModeNative(m);
+            WithEngine(() => ModeNative(m));
         }
 
         /// <summary>
@@ -356,7 +403,7 @@ namespace OxygenBasic.NET.Core
         /// <returns>Returns void.</returns>
         public static void Pathcall(IntPtr m)
         {
-            PathcallNative(m);
+            WithEngine(() => PathcallNative(m));
         }
 
         /// <summary>
@@ -366,7 +413,7 @@ namespace OxygenBasic.NET.Core
         /// <returns>Returns void.</returns>
         public static void Pathcall(uint m)
         {
-            PathcallNative(new IntPtr(unchecked((int)m)));
+            Pathcall(new IntPtr(unchecked((int)m)));
         }
 
         /// <summary>
@@ -408,16 +455,19 @@ namespace OxygenBasic.NET.Core
         /// <returns>Returns string.</returns>
         public static string Prep(string s)
         {
-            IntPtr p = AnsiBStrMarshal.Alloc(s);
+            return WithEngine(() =>
+            {
+                IntPtr p = AnsiBStrMarshal.Alloc(s);
 
-            try
-            {
-                return AnsiBStrMarshal.PtrToString(PrepNative(p));
-            }
-            finally
-            {
-                AnsiBStrMarshal.Free(p);
-            }
+                try
+                {
+                    return AnsiBStrMarshal.PtrToString(PrepNative(p));
+                }
+                finally
+                {
+                    AnsiBStrMarshal.Free(p);
+                }
+            }, requireCompileReady: true);
         }
 
         /// <summary>
@@ -427,7 +477,7 @@ namespace OxygenBasic.NET.Core
         /// <returns>Returns void.</returns>
         public static void Varcall(IntPtr m)
         {
-            VarcallNative(m);
+            WithEngine(() => VarcallNative(m));
         }
 
         /// <summary>
@@ -437,7 +487,7 @@ namespace OxygenBasic.NET.Core
         /// <returns>Returns void.</returns>
         public static void Varcall(uint m)
         {
-            VarcallNative(new IntPtr(unchecked((int)m)));
+            Varcall(new IntPtr(unchecked((int)m)));
         }
 
         /// <summary>
@@ -478,7 +528,7 @@ namespace OxygenBasic.NET.Core
         /// <returns>Returns string.</returns>
         public static string Version()
         {
-            return AnsiBStrMarshal.PtrToString(VersionNative());
+            return WithEngine(() => AnsiBStrMarshal.PtrToString(VersionNative()));
         }
 
         /// <summary>
@@ -488,16 +538,19 @@ namespace OxygenBasic.NET.Core
         /// <returns>Returns string.</returns>
         public static string View(string s)
         {
-            IntPtr p = AnsiBStrMarshal.Alloc(s);
+            return WithEngine(() =>
+            {
+                IntPtr p = AnsiBStrMarshal.Alloc(s);
 
-            try
-            {
-                return AnsiBStrMarshal.PtrToString(ViewNative(p));
-            }
-            finally
-            {
-                AnsiBStrMarshal.Free(p);
-            }
+                try
+                {
+                    return AnsiBStrMarshal.PtrToString(ViewNative(p));
+                }
+                finally
+                {
+                    AnsiBStrMarshal.Free(p);
+                }
+            }, requireCompileReady: true);
         }
 
         /// <summary>
@@ -651,6 +704,59 @@ namespace OxygenBasic.NET.Core
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// ThrowIfAbstractMode
+        /// </summary>
+        /// <returns>Returns void.</returns>
+        private static void ThrowIfAbstractMode()
+        {
+            if (_abstractMode)
+            {
+                throw new InvalidOperationException(AbstractModeMessage);
+            }
+        }
+
+        /// <summary>
+        /// WithEngine
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="action"></param>
+        /// <param name="requireCompileReady"></param>
+        /// <returns>Returns T.</returns>
+        private static T WithEngine<T>(
+            Func<T> action,
+            bool requireCompileReady = false)
+        {
+            lock (EngineLock)
+            {
+                ThrowIfProcessNotSupported();
+
+                if (requireCompileReady)
+                {
+                    ThrowIfAbstractMode();
+                }
+
+                return action();
+            }
+        }
+
+        /// <summary>
+        /// WithEngine
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="requireCompileReady"></param>
+        /// <returns>Returns void.</returns>
+        private static void WithEngine(
+            Action action,
+            bool requireCompileReady = false)
+        {
+            WithEngine(() =>
+            {
+                action();
+                return 0;
+            }, requireCompileReady);
         }
     }
 }

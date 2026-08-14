@@ -48,4 +48,5 @@ A 64-bit process (including **AnyCPU** on 64-bit Windows) no longer loads `oxyge
 - Hosted `Run` / `RunFile` with `OxygenHostOptions` / `OxygenRunResult`
 - `InitHost`, `Pathcall` / `Varcall` managed resolvers, `Eval` alias
 - Runtime resolver for `oxygen.dll` (x86) / `oxygen64.dll` (x64)
+- Engine lock + `IsAbstractMode`: compile/Run throw after `Abst()` (no native reset; start a new process). See [docs/oxygen-process-state.md](docs/oxygen-process-state.md)
 - Windows GitHub Actions CI (x86 test, x64 build)

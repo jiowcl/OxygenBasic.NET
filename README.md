@@ -17,6 +17,8 @@
 
 > **x64 / AnyCPU:** A 64-bit process throws `PlatformNotSupportedException` instead of loading `oxygen64.dll` (which AVs in `DllMain`). Prefer **x86**. See [docs/oxygen64-x64-runtime.md](docs/oxygen64-x64-runtime.md). Override with `OXYGENBASIC_TRY_X64=1` only if you have a fixed native DLL.
 
+> **Process state:** `oxygen.dll` is global to the process (single-threaded use; `Abst()` cannot be undone). See [docs/oxygen-process-state.md](docs/oxygen-process-state.md).
+
 ## CI
 
 GitHub Actions runs on `windows-latest`:
