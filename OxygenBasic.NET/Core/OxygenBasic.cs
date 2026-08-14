@@ -141,6 +141,25 @@ namespace OxygenBasic.NET.Core
         public static string NativeLibraryFileName => OxygenNative.NativeLibraryFileName;
 
         /// <summary>
+        /// True when the current process architecture can load Oxygen without an x64 override.
+        /// 64-bit (AnyCPU on 64-bit Windows) is refused until a safe <c>oxygen64.dll</c> is available.
+        /// </summary>
+        public static bool SupportsCurrentProcess => OxygenNative.SupportsCurrentProcess;
+
+        /// <summary>
+        /// Throws if this is a 64-bit process and <c>oxygen64.dll</c> must not be loaded.
+        /// Called automatically on the first native call.
+        /// </summary>
+        /// <exception cref="PlatformNotSupportedException">Current process is x64 without override.</exception>
+        public static void ThrowIfProcessNotSupported()
+        {
+            if (!SupportsCurrentProcess)
+            {
+                throw new PlatformNotSupportedException(OxygenNative.X64ProcessNotSupportedMessage);
+            }
+        }
+
+        /// <summary>
         /// Initialize the Oxygen host for .NET use (bstring UTF-8 mode).
         /// Matches thinBasic Oxygen module default <c>o2_mode(9)</c>.
         /// </summary>
@@ -543,6 +562,8 @@ namespace OxygenBasic.NET.Core
             }
 
             OxygenHostOptions host = options ?? new OxygenHostOptions();
+
+            ThrowIfProcessNotSupported();
 
             if (host.ClearHostCallbacks)
             {

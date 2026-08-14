@@ -22,6 +22,12 @@ namespace OxygenBasic.Example
         static void Main(
             string[] args)
         {
+            if (!Oxygenbasic.SupportsCurrentProcess)
+            {
+                Console.WriteLine(Oxygenbasic.NativeLibraryFileName + " cannot be loaded in this process.");
+                Oxygenbasic.ThrowIfProcessNotSupported();
+            }
+
             string sampleRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "Sample"));
             string includeRoot = Path.Combine(sampleRoot, "inc");
             string scriptPath = Path.Combine(sampleRoot, "hosted_demo.txt");

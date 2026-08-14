@@ -15,7 +15,7 @@
 - .NET 8 / .NET 9 / .NET 10 (Windows, **x86 and x64**)  
 - Native: `oxygen.dll` (x86) / `oxygen64.dll` (x64), selected at runtime via `DllImport` resolver  
 
-> **x64 runtime:** Prefer x86 for execution today. See [docs/oxygen64-x64-runtime.md](docs/oxygen64-x64-runtime.md) for the `oxygen64.dll` `DllMain` AV investigation.
+> **x64 / AnyCPU:** A 64-bit process throws `PlatformNotSupportedException` instead of loading `oxygen64.dll` (which AVs in `DllMain`). Prefer **x86**. See [docs/oxygen64-x64-runtime.md](docs/oxygen64-x64-runtime.md). Override with `OXYGENBASIC_TRY_X64=1` only if you have a fixed native DLL.
 
 ## CI
 

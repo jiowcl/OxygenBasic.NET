@@ -25,6 +25,25 @@ namespace OxygenBasic.NET.Core.Tests
         }
 
         [TestMethod]
+        public void SupportsCurrentProcessTest()
+        {
+            if (Environment.Is64BitProcess)
+            {
+                Assert.IsFalse(Oxygenbasic.SupportsCurrentProcess);
+                Assert.ThrowsExactly<PlatformNotSupportedException>(
+                    () => Oxygenbasic.ThrowIfProcessNotSupported());
+                Assert.ThrowsExactly<PlatformNotSupportedException>(
+                    () => Oxygenbasic.Version());
+            }
+            else
+            {
+                Assert.IsTrue(Oxygenbasic.SupportsCurrentProcess);
+                Oxygenbasic.ThrowIfProcessNotSupported();
+                Assert.AreEqual("oxygen.dll", Oxygenbasic.NativeLibraryFileName);
+            }
+        }
+
+        [TestMethod]
         public void LibTest()
         {
             IntPtr result = Oxygenbasic.Lib();

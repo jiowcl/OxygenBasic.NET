@@ -12,18 +12,30 @@ namespace OxygenBasic.NET.Core
     /// Resolves <c>oxygen.dll</c> DllImports to <c>oxygen.dll</c> (x86) or <c>oxygen64.dll</c> (x64).
     /// </summary>
     /// <remarks>
-    /// Upstream <c>oxygen64.dll</c> currently raises ACCESS_VIOLATION inside <c>DllMain</c>
-    /// on tested Windows 11 hosts. Details: <c>docs/oxygen64-x64-runtime.md</c>.
+    /// A 64-bit process would load <c>oxygen64.dll</c>, whose <c>DllMain</c> currently AVs.
+    /// Loading is refused with <see cref="PlatformNotSupportedException"/> unless
+    /// <c>OXYGENBASIC_TRY_X64=1</c> is set. Details: <c>docs/oxygen64-x64-runtime.md</c>.
     /// </remarks>
     internal static class OxygenNative
     {
-        // The name of the import library.
+        /// <summary>
+        /// Set to 1/true/yes to attempt loading oxygen64.dll in a 64-bit process.
+        /// </summary>
+        public const string TryX64EnvironmentVariable = "OXYGENBASIC_TRY_X64";
+
+        /// <summary>
+        /// The name of the import.
+        /// </summary>
         private const string ImportName = "oxygen.dll";
 
-        // The synchronization object.
+        /// <summary>
+        /// The sync object.
+        /// </summary>
         private static readonly object Sync = new object();
 
-        // The flag to indicate if the resolver is registered.
+        /// <summary>
+        /// True when the resolver is registered.
+        /// </summary>
         private static bool _resolverRegistered;
 
         /// <summary>
@@ -51,17 +63,35 @@ namespace OxygenBasic.NET.Core
         /// <summary>
         /// Native file name for the current process architecture.
         /// </summary>
-        /// <returns>Returns the native library file name.</returns>
         public static string NativeLibraryFileName =>
             Environment.Is64BitProcess ? "oxygen64.dll" : "oxygen.dll";
 
         /// <summary>
-        /// Resolve the native library file name.
+        /// True when this process can safely load the matching Oxygen native DLL
+        /// without an explicit <see cref="TryX64EnvironmentVariable"/> override.
         /// </summary>
-        /// <param name="libraryName">The name of the library to resolve.</param>
-        /// <param name="assembly">The assembly to resolve the library from.</param>
-        /// <param name="searchPath">The search path to resolve the library from.</param>
-        /// <returns>Returns the resolved library file name.</returns>
+        public static bool SupportsCurrentProcess =>
+            !Environment.Is64BitProcess || IsTryX64Enabled();
+
+        /// <summary>
+        /// Message thrown when a 64-bit process would otherwise LoadLibrary oxygen64.dll.
+        /// </summary>
+        public static string X64ProcessNotSupportedMessage =>
+            "OxygenBasic.NET requires a 32-bit (x86) process. " +
+            "This process is x64; loading oxygen64.dll calls DllMain and raises " +
+            "ACCESS_VIOLATION (0xC0000005) on current upstream binaries. " +
+            "Build and run with PlatformTarget=x86 (for example: dotnet build -p:Platform=x86). " +
+            "AnyCPU on 64-bit Windows runs as x64 and will hit this error. " +
+            "See docs/oxygen64-x64-runtime.md. " +
+            "Set " + TryX64EnvironmentVariable + "=1 only if you have a fixed oxygen64.dll.";
+
+        /// <summary>
+        /// Resolve the DllImport.
+        /// </summary>
+        /// <param name="libraryName"></param>
+        /// <param name="assembly"></param>
+        /// <param name="searchPath"></param>
+        /// <returns>Returns IntPtr.</returns>
         private static IntPtr Resolve(
             string libraryName,
             Assembly assembly,
@@ -72,12 +102,18 @@ namespace OxygenBasic.NET.Core
                 return IntPtr.Zero;
             }
 
-            string fileName = NativeLibraryFileName;
+            if (Environment.Is64BitProcess && !IsTryX64Enabled())
+            {
+                throw new PlatformNotSupportedException(X64ProcessNotSupportedMessage);
+            }
 
+            string fileName = NativeLibraryFileName;
             string baseDir = AppContext.BaseDirectory;
+
             if (!string.IsNullOrEmpty(baseDir))
             {
                 string candidate = Path.Combine(baseDir, fileName);
+
                 if (File.Exists(candidate) && NativeLibrary.TryLoad(candidate, out IntPtr handle))
                 {
                     return handle;
@@ -85,9 +121,11 @@ namespace OxygenBasic.NET.Core
             }
 
             string assemblyDir = Path.GetDirectoryName(assembly.Location);
+
             if (!string.IsNullOrEmpty(assemblyDir))
             {
                 string candidate = Path.Combine(assemblyDir, fileName);
+
                 if (File.Exists(candidate) && NativeLibrary.TryLoad(candidate, out IntPtr handle))
                 {
                     return handle;
@@ -100,6 +138,26 @@ namespace OxygenBasic.NET.Core
             }
 
             return IntPtr.Zero;
+        }
+
+        /// <summary>
+        /// IsTryX64Enabled
+        /// </summary>
+        /// <returns>Returns bool.</returns>
+        private static bool IsTryX64Enabled()
+        {
+            string value = Environment.GetEnvironmentVariable(TryX64EnvironmentVariable);
+
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return false;
+            }
+
+            value = value.Trim();
+            
+            return value == "1"
+                || value.Equals("true", StringComparison.OrdinalIgnoreCase)
+                || value.Equals("yes", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

@@ -42,8 +42,20 @@ Skipping `DllMain` is not a viable workaround: the compiler entry points still n
 ## Impact on this Project  
 
 - **x86**: full build, tests (net8/9/10), hosted example — supported
-- **x64**: managed build and NuGet packaging of `oxygen64.dll` — ready; **native tests skipped** in CI until the DLL loads cleanly
-- Resolver remains in place so a fixed upstream `oxygen64.dll` works without managed API changes
+- **x64 / AnyCPU**: managed build and NuGet packaging of `oxygen64.dll` are ready; **native load is refused** with `PlatformNotSupportedException` so the process does not AV in `DllMain`
+- Set `OXYGENBASIC_TRY_X64=1` to attempt `oxygen64.dll` anyway (for a fixed upstream binary)
+- Resolver remains in place so a fixed `oxygen64.dll` works without managed API changes
+
+## AnyCPU / x64 process
+
+On 64-bit Windows, AnyCPU runs as x64. The first Oxygen P/Invoke would otherwise `LoadLibrary` `oxygen64.dll` and crash. The wrapper detects a 64-bit process and throws before loading:
+
+```text
+OxygenBasic.NET requires a 32-bit (x86) process. ...
+Build and run with PlatformTarget=x86 (for example: dotnet build -p:Platform=x86).
+```
+
+Use `Oxygenbasic.SupportsCurrentProcess` or `ThrowIfProcessNotSupported()` to check before calling the engine.
 
 ## TODO  
 
