@@ -10,6 +10,7 @@
     <PackageProjectUrl>https://github.com/jiowcl/OxygenBasic.NET</PackageProjectUrl>
     <PackageReleaseNotes>1.0.8 - x86/x64 native load (oxygen.dll / oxygen64.dll); Windows CI</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageTags>oxygenbasic;o2h;oxygen;scripting;compiler;pinvoke;windows;x86</PackageTags>
     <Version>1.0.8</Version>
     <RepositoryUrl>https://github.com/jiowcl/OxygenBasic.NET</RepositoryUrl>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
