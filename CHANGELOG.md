@@ -1,6 +1,10 @@
 # Changelog
 
-## 1.0.8
+## 1.0.9  
+
+- .NET 11 Suported  
+
+## 1.0.8  
 
 **Breaking** for callers upgrading from 1.0.7 and earlier.
 
