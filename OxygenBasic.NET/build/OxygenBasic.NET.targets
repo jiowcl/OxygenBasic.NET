@@ -1,0 +1,33 @@
+<Project>
+
+  <!--
+    NuGet only copies runtimes/{rid}/native assets automatically when the consuming project
+    has a RuntimeIdentifier. This file copies the matching OxygenBasic native DLL into the
+    consumer's output folder for plain AnyCPU / x86 / x64 projects.
+      PlatformTarget x86  -> oxygen.dll
+      PlatformTarget x64  -> oxygen64.dll
+      otherwise (AnyCPU) -> both (the runtime resolver picks by process bitness)
+  -->
+
+  <PropertyGroup>
+    <OxygenBasicNativeRoot>$(MSBuildThisFileDirectory)..\runtimes\</OxygenBasicNativeRoot>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(PlatformTarget)' == 'x86'">
+    <OxygenBasicNativeFile Include="$(OxygenBasicNativeRoot)win-x86\native\oxygen.dll" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(PlatformTarget)' == 'x64'">
+    <OxygenBasicNativeFile Include="$(OxygenBasicNativeRoot)win-x64\native\oxygen64.dll" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(PlatformTarget)' != 'x86' And '$(PlatformTarget)' != 'x64'">
+    <OxygenBasicNativeFile Include="$(OxygenBasicNativeRoot)win-x86\native\oxygen.dll" />
+    <OxygenBasicNativeFile Include="$(OxygenBasicNativeRoot)win-x64\native\oxygen64.dll" />
+  </ItemGroup>
+
+  <Target Name="OxygenBasicCopyNativeFiles" AfterTargets="Build" Condition="'@(OxygenBasicNativeFile)' != ''">
+    <Copy SourceFiles="@(OxygenBasicNativeFile)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+  </Target>
+
+</Project>

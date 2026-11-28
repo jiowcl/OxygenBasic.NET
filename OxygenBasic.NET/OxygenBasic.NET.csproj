@@ -49,14 +49,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ContentWithTargetPath Include="oxygen.dll" Pack="true">
+    <!-- Local build output (tests / example reference this project). -->
+    <ContentWithTargetPath Include="oxygen.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <TargetPath>oxygen.dll</TargetPath>
     </ContentWithTargetPath>
-    <ContentWithTargetPath Include="oxygen64.dll" Pack="true">
+    <ContentWithTargetPath Include="oxygen64.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <TargetPath>oxygen64.dll</TargetPath>
     </ContentWithTargetPath>
+  </ItemGroup>
+
+  <!-- NuGet package contents. ContentWithTargetPath is not packed, so use None + PackagePath. -->
+  <ItemGroup>
+    <None Include="oxygen.dll" Pack="true" PackagePath="runtimes\win-x86\native\" />
+    <None Include="oxygen64.dll" Pack="true" PackagePath="runtimes\win-x64\native\" />
+    <None Include="build\OxygenBasic.NET.targets" Pack="true" PackagePath="build\" />
   </ItemGroup>
 
 </Project>
