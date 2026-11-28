@@ -43,9 +43,12 @@ jobs:
     - name: Verify NuGet package native contents
       shell: pwsh
       run: |
-        $nupkgs = Get-ChildItem -Path "OxygenBasic.NET/OxygenBasic.NET/bin" -Filter "*.nupkg" -Recurse -ErrorAction SilentlyContinue
+        $csproj = "OxygenBasic.NET/OxygenBasic.NET.csproj"
+        if (-not (Test-Path $csproj)) { throw "Project not found: $csproj (check workflow working directory)." }
+        $projectDir = Split-Path -Parent (Resolve-Path $csproj).Path
+        $nupkgs = Get-ChildItem -Path (Join-Path $projectDir "bin") -Filter "*.nupkg" -Recurse -ErrorAction SilentlyContinue
         if (-not $nupkgs) {
-          throw "No .nupkg under OxygenBasic.NET/OxygenBasic.NET/bin (GeneratePackageOnBuild expected)."
+          throw "No .nupkg under $projectDir/bin (GeneratePackageOnBuild expected)."
         }
         $nupkg = $nupkgs | Sort-Object LastWriteTime -Descending | Select-Object -First 1
         Write-Host "Checking $($nupkg.FullName)"
