@@ -8,7 +8,7 @@
     <Company>Inwazy Technology</Company>
     <Authors>Jiowcl</Authors>
     <PackageProjectUrl>https://github.com/jiowcl/OxygenBasic.NET</PackageProjectUrl>
-    <PackageReleaseNotes>1.0.9 Add .NET 11 Supported</PackageReleaseNotes>
+    <PackageReleaseNotes>1.0.9: .NET 11 support; NuGet includes oxygen.dll and oxygen64.dll under runtimes/win-x86|x64/native plus build/OxygenBasic.NET.targets so consuming projects copy native DLLs to output.</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageTags>oxygenbasic;o2h;oxygen;scripting;compiler;pinvoke;windows;x86</PackageTags>
     <Version>1.0.9</Version>

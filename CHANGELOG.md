@@ -2,7 +2,11 @@
 
 ## 1.0.9  
 
-- .NET 11 Suported  
+- .NET 11 supported
+- NuGet package now ships native binaries (1.0.9 on nuget.org may lack them; rebuild/republish from this tree):
+  - `runtimes/win-x86/native/oxygen.dll`
+  - `runtimes/win-x64/native/oxygen64.dll`
+  - `build/OxygenBasic.NET.targets` copies the matching DLL(s) into the consumer output (AnyCPU gets both; x86/x64 get one)
 
 ## 1.0.8  
 

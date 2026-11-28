@@ -40,6 +40,40 @@ jobs:
     - name: Build
       run: dotnet build OxygenBasic.NET.sln --configuration Release -p:Platform=x86
 
+    - name: Verify NuGet package native contents
+      shell: pwsh
+      run: |
+        $nupkgs = Get-ChildItem -Path "OxygenBasic.NET/OxygenBasic.NET/bin" -Filter "*.nupkg" -Recurse -ErrorAction SilentlyContinue
+        if (-not $nupkgs) {
+          throw "No .nupkg under OxygenBasic.NET/OxygenBasic.NET/bin (GeneratePackageOnBuild expected)."
+        }
+        $nupkg = $nupkgs | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+        Write-Host "Checking $($nupkg.FullName)"
+        Add-Type -AssemblyName System.IO.Compression.FileSystem
+        $zip = [System.IO.Compression.ZipFile]::OpenRead($nupkg.FullName)
+        try {
+          $names = $zip.Entries | ForEach-Object { $_.FullName.Replace('\', '/') }
+          $required = @(
+            @{ Path = 'runtimes/win-x86/native/oxygen.dll'; MinBytes = 500000 },
+            @{ Path = 'runtimes/win-x64/native/oxygen64.dll'; MinBytes = 500000 },
+            @{ Path = 'build/OxygenBasic.NET.targets'; MinBytes = 200 }
+          )
+          foreach ($item in $required) {
+            $entry = $zip.Entries | Where-Object { $_.FullName.Replace('\', '/') -eq $item.Path } | Select-Object -First 1
+            if (-not $entry) { throw "Package missing required entry: $($item.Path)" }
+            if ($entry.Length -lt $item.MinBytes) {
+              throw "Package entry $($item.Path) too small ($($entry.Length) bytes, expected >= $($item.MinBytes))."
+            }
+            Write-Host "OK $($item.Path) ($($entry.Length) bytes)"
+          }
+          $libDll = $names | Where-Object { $_ -match '^lib/net[0-9.]+-windows.*/OxygenBasic\.NET\.dll$' }
+          if (-not $libDll) { throw "Package missing lib/*/OxygenBasic.NET.dll" }
+          Write-Host "OK lib assemblies: $($libDll -join ', ')"
+        }
+        finally {
+          $zip.Dispose()
+        }
+
     - name: Test (net8 / net9 / net10)
       shell: pwsh
       run: |
